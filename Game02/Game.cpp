@@ -3,7 +3,7 @@
 void Game::initWindow()
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(600,900),"Tower Escape", sf::Style::Close | sf::Style::Titlebar );
-	this->window->setFramerateLimit(144);
+	this->window->setFramerateLimit(60);
 }
 
 void Game::initPlayer()
