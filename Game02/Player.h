@@ -12,6 +12,7 @@ private:
 	//animation
 	short animState;
 	sf::IntRect currentFrame;
+	bool animationSwitch;
 
 	//physics
 	sf::Vector2f velocity;
@@ -19,6 +20,8 @@ private:
 	float velocityMin;
 	float acceleration;
 	float drag;
+	float gravity;
+	float velocityMaxY;
 
 	void initVariables();
 	void initTexture();
@@ -29,8 +32,16 @@ private:
 public:
 	Player();
 	virtual ~Player();
+	//Accessors
+	const bool& getAnimSwitch();
+	const sf::Vector2f getPosition() const;
+	const sf::FloatRect getGlobalBounds() const;
+
+	void setPosition(const float x, const float y);
+	void resetVelocityY();
 
 	//Func
+	void resetAnimationTimer();
 	void move(const float dir_x, const float dir_y);
 	void updatePhysics();
 	void updateMovement();
