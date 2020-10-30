@@ -18,7 +18,7 @@ void Player::initTexture()
 void Player::initSprite()
 {
 	this->sprite.setTexture(this->textureSheet);
-	this->currentFrame = sf::IntRect(0, 100, 120, 110);//x,y,w,h
+	this->currentFrame = sf::IntRect(0, 100, 130, 110);//x,y,w,h
 	this->sprite.setTextureRect(this->currentFrame);
 	this->sprite.setScale(0.8f, 0.8f);
 }
@@ -141,11 +141,15 @@ void Player::updateMovement()
 
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 	{
-		this->sprite.move(-1.f, 0.f);
+		this->animState = PLAYER_ANIMATION_STATES::MOVING_UP;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 	{
-		this->sprite.move(1.f, 0.f);
+		this->animState = PLAYER_ANIMATION_STATES::DIG;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+	{
+		this->animState = PLAYER_ANIMATION_STATES::ATTACK;
 	}
 }
 
@@ -155,7 +159,7 @@ void Player::updateAnimations()
 	{
 		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.4f || this->getAnimSwitch())
 		{
-			this->currentFrame.top = 100.f;
+			this->currentFrame.top = 90.f;
 			this->currentFrame.left += 150.f;
 			if (this->currentFrame.left > 300.f)
 				this->currentFrame.left = 0;
@@ -167,7 +171,7 @@ void Player::updateAnimations()
 	{
 		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
 		{
-			this->currentFrame.top = 300.f;
+			this->currentFrame.top = 290.f;
 			this->currentFrame.left += 150.f;
 			if (this->currentFrame.left > 750.f)
 				this->currentFrame.left = 0;
@@ -181,7 +185,7 @@ void Player::updateAnimations()
 	{
 		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
 		{
-			this->currentFrame.top = 300.f;
+			this->currentFrame.top = 290.f;
 			this->currentFrame.left += 150.f;
 			if (this->currentFrame.left > 750.f)
 				this->currentFrame.left = 0;
@@ -190,6 +194,42 @@ void Player::updateAnimations()
 		}
 		this->sprite.setScale(-0.8f, 0.8f);
 		this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 3.f, 0.f);
+	}
+	else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_UP)
+	{
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f)
+		{
+			this->currentFrame.top = 690.f;
+			this->currentFrame.left += 150.f;
+			if (this->currentFrame.left >= 300.f)
+				this->currentFrame.left = 0;
+			this->animationTimer.restart();
+			this->sprite.setTextureRect(this->currentFrame);
+		}
+	}
+	else if (this->animState == PLAYER_ANIMATION_STATES::DIG)
+	{
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f)
+		{
+			this->currentFrame.top = 860.f;
+			this->currentFrame.left += 150.f;
+			if (this->currentFrame.left >= 150.f)
+				this->currentFrame.left = 0;
+			this->animationTimer.restart();
+			this->sprite.setTextureRect(this->currentFrame);
+		}
+	}
+	else if (this->animState == PLAYER_ANIMATION_STATES::ATTACK)
+	{
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.2f)
+		{
+			this->currentFrame.top = 490.f;
+			this->currentFrame.left += 150.f;
+			if (this->currentFrame.left >= 450.f)
+				this->currentFrame.left = 0;
+			this->animationTimer.restart();
+			this->sprite.setTextureRect(this->currentFrame);
+		}
 	}
 	else
 		this->animationTimer.restart();
@@ -205,10 +245,10 @@ void Player::update()
 void Player::render(sf::RenderTarget& target)
 {
 	target.draw(this->sprite);
-	sf::CircleShape circ;
-	circ.setFillColor(sf::Color::Red);
-	circ.setRadius(2.f);
-	circ.setPosition(this->sprite.getPosition());
-	
-	target.draw(circ);
+	//sf::CircleShape circ;
+	//circ.setFillColor(sf::Color::Red);
+	//circ.setRadius(2.f);
+	//circ.setPosition(this->sprite.getPosition());
+	//
+	//target.draw(circ);
 }

@@ -43,13 +43,13 @@ void Game::updateCollision()
 			this->window->getSize().y - this->player->getGlobalBounds().height
 			);
 	}
-	if (this->player->getGlobalBounds().left <= 20.f)
+	if (this->player->getGlobalBounds().left <= 65.f)
 	{
-		this->player->setPosition(30.f, this->player->getGlobalBounds().top);
+		this->player->setPosition(135.f, this->player->getGlobalBounds().top);
 	}
-	else if (this->player->getGlobalBounds().left >= 580.f)
+	else if (this->player->getGlobalBounds().left >= 440.f)
 	{
-		this->player->setPosition(570.f, this->player->getGlobalBounds().top);
+		this->player->setPosition(440.f, this->player->getGlobalBounds().top);
 	}
 }
 
@@ -115,7 +115,6 @@ void Game::render()
 	//draw world
 	this->renderWorld();
 
-	this->window->clear();
 	this->renderPlayer();
 	this->window->display();
 }
