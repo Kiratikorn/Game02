@@ -6,6 +6,15 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
+void Game::initWorld()
+{
+	if (!this->worldBackgroundTex.loadFromFile("Pic/Bg_1.png"))
+	{
+		printf("BG ERROR");
+	}
+	this->worldBackground.setTexture(this->worldBackgroundTex);
+}
+
 void Game::initPlayer()
 {
 	this->player = new Player();
@@ -14,6 +23,7 @@ void Game::initPlayer()
 Game::Game()
 {
 	this->initWindow();
+	this->initWorld();
 	this->initPlayer();
 }
 
@@ -33,6 +43,14 @@ void Game::updateCollision()
 			this->window->getSize().y - this->player->getGlobalBounds().height
 			);
 	}
+	if (this->player->getGlobalBounds().left <= 20.f)
+	{
+		this->player->setPosition(30.f, this->player->getGlobalBounds().top);
+	}
+	else if (this->player->getGlobalBounds().left >= 580.f)
+	{
+		this->player->setPosition(570.f, this->player->getGlobalBounds().top);
+	}
 }
 
 void Game::updatePlayer()
@@ -40,14 +58,18 @@ void Game::updatePlayer()
 	this->player->update();
 }
 
-void Game::run()
+void Game::updateWorld()
 {
-	while (this->window->isOpen());
-	{
-		this->update();
-		this->render();
-	}
 }
+
+//void Game::run()
+//{
+//	while (this->window->isOpen());
+//	{
+//		this->update();
+//		this->render();
+//	}
+//}
 
 void Game::update()
 {
@@ -72,6 +94,8 @@ void Game::update()
 	this->updatePlayer();
 
 	this->updateCollision();
+
+	this->updateWorld();
 }
 
 void Game::renderPlayer()
@@ -79,8 +103,18 @@ void Game::renderPlayer()
 	this->player->render(*this->window);
 }
 
+void Game::renderWorld()
+{
+	this->window->draw(this->worldBackground);
+}
+
 void Game::render()
 {
+	this->window->clear();
+
+	//draw world
+	this->renderWorld();
+
 	this->window->clear();
 	this->renderPlayer();
 	this->window->display();

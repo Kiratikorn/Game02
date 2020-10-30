@@ -37,6 +37,7 @@ public:
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds() const;
 
+	void setPosition(const sf::Vector2f pos);
 	void setPosition(const float x, const float y);
 	void resetVelocityY();
 
