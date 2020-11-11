@@ -3,6 +3,8 @@
 #include <SFML/System.hpp>
 #include "Player.h"
 #include "firer.h"
+#include "Platform.h"
+#include "Orc.h"
 //#include "TileMap.h"
 //#include "Map.h"
 class Game
@@ -21,6 +23,7 @@ private:
 
 	Player* player;
 	firer* fire;
+	Orc* orc_enemy;
 
 	bool ran = false;
 
@@ -33,12 +36,23 @@ private:
 public:
 	Game();
 	virtual ~Game();
+	
 	int Block();
 	void showMap();
 	void showBlock();
 	void updateBlock();
+	void enemy_view();
 	//void setPositionBlock(int x, int y);
-
+	sf::CircleShape test;
+	sf::Sprite terrain[29][10];
+	int have_terr[30][10];
+	float plat_left_hit;
+	float plat_right_hit;
+	float plat_top_hit;
+	float plat_bottom_hit ;
+	void collide();
+	float level[100];
+	//Platform level[100];
 	void updatePlayer();
 	void updateWorld();
 	void updateCollision();
@@ -51,6 +65,6 @@ public:
 protected:
 	int type;
 	
-	sf::Sprite terrain[100];
+	
 };
 
