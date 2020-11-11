@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include"Player.h"
-enum orc_ANIMATION_STATES { IDLE_orc = 0, MOVING_LEFT_orc, MOVING_RIGHT_orc, ATTACK_orc};
+enum orc_ANIMATION_STATES { IDLE_orc = 0, MOVING_LEFT_orc, MOVING_RIGHT_orc};
 class Orc
 {
 private:
@@ -47,7 +47,7 @@ public:
 	float gravity_orc;
 
 	//Accessors
-	const bool& getAnimSwitch();
+	const bool& getAnimSwitch_orc();
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds_orc() const;
 	const sf::FloatRect getGlobalBounds_hit_orc() const;

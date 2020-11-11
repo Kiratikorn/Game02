@@ -5,6 +5,7 @@
 #include "firer.h"
 #include "Platform.h"
 #include "Orc.h"
+#include "fire_above.h"
 //#include "TileMap.h"
 //#include "Map.h"
 class Game
@@ -24,6 +25,7 @@ private:
 	Player* player;
 	firer* fire;
 	Orc* orc_enemy;
+	Fire_above* fire_above;
 
 	bool ran = false;
 

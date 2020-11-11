@@ -5,9 +5,7 @@ Orc::Orc()
 	this->initVariables();
 	this->initTexture();
 	this->initSprite();
-
 	//this->initPhysics();
-
 }
 
 Orc::~Orc()
@@ -29,14 +27,14 @@ void Orc::initVariables()
 
 void Orc::initTexture()
 {
-	this->OrcTex.loadFromFile("Pic/Orc.png");
+	this->OrcTex.loadFromFile("Pic/Orc_sprite.png");
 
 }
 
 void Orc::initSprite()
 {
 	this->orc.setTexture(this->OrcTex);
-	this->currentFrame = sf::IntRect(0, 0, 60, 55);//x,y,w,h
+	this->currentFrame = sf::IntRect(0, 0, 58, 57);//x,y,w,h
 	this->orc.setTextureRect(this->currentFrame);
 	this->orc.setPosition(300.f, 600.f);
 	this->orc.setScale(1.0f, 1.0f);
@@ -80,7 +78,7 @@ void Orc::hitbox_O()
 
 }
 
-const bool& Orc::getAnimSwitch()
+const bool& Orc::getAnimSwitch_orc()
 {
 	bool anim_switch = this->animationSwitch;
 
@@ -185,12 +183,12 @@ void Orc::updateMovement_orc()
 	{
 		if (this->check_move == 1)
 		{
-			orc.move(-1.f, 0.f);
+			orc.move(-1.5f, 0.f);
 			this->animState = orc_ANIMATION_STATES::MOVING_LEFT_orc;
 		}
 		else if (this->check_move == 2)
 		{
-			orc.move(1.f, 0.f);
+			orc.move(1.5f, 0.f);
 			this->animState = orc_ANIMATION_STATES::MOVING_RIGHT_orc;
 		}
 		
@@ -199,28 +197,15 @@ void Orc::updateMovement_orc()
 	{
 		orc.move(0.0f, 0.f);
 	}
-	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-	//{
-	//	this->move(1.f, 0.f);
-	//	this->animState = PLAYER_ANIMATION_STATES::MOVING_RIGHT_orc;
-
-	//}
-	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-	//{
-	//	this->animState = PLAYER_ANIMATION_STATES::MOVING_UP_orc;
-	//}
-	//else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
-	//{
-	//	this->animState = PLAYER_ANIMATION_STATES::ATTACK_orc;
-	//}
 }
+
 
 void Orc::updateAnimations_orc()
 {
 
 	if (this->animState == orc_ANIMATION_STATES::IDLE_orc)
 	{
-		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f || this->getAnimSwitch())
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f || this->getAnimSwitch_orc())
 		{
 			this->currentFrame.top = 0.f;
 			this->currentFrame.left += 60.f;
@@ -231,37 +216,35 @@ void Orc::updateAnimations_orc()
 		}
 	}
 
-	//else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_RIGHT_orc)
-	//{
-	//	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
-	//	{
-	//		this->currentFrame.top = 300.f;
-	//		this->currentFrame.left += 150.f;
-	//		if (this->currentFrame.left > 750.f)
-	//			this->currentFrame.left = 0;
-	//		this->animationTimer.restart();
-	//		this->sprite.setTextureRect(this->currentFrame);
-	//	}
-	//	this->sprite.setScale(0.8f, 0.8f);
-	//	this->sprite.setOrigin(0.f, 0.f);
-	//	this->hitbox_player.setScale(1.f, 1.f);
-	//}
-	//else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_LEFT_orc)
-	//{
-	//	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
-	//	{
-	//		this->currentFrame.top = 300.f;
-	//		this->currentFrame.left += 150.f;
-	//		if (this->currentFrame.left > 750.f)
-	//			this->currentFrame.left = 0;
-	//		this->animationTimer.restart();
-	//		this->sprite.setTextureRect(this->currentFrame);
-	//	}
-	//	this->sprite.setScale(-0.8f, 0.8f);
-	//	this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 3.f, 0.f);
-	//	this->hitbox_player.setScale(-1.f, 1.f);
+	else if (this->animState == orc_ANIMATION_STATES::MOVING_LEFT_orc)
+	{
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
+		{
+			this->currentFrame.top = 90.f;
+			this->currentFrame.left += 60.f;
+			if (this->currentFrame.left >= 480.f)
+				this->currentFrame.left = 0;
+			this->animationTimer.restart();
+			this->orc.setTextureRect(this->currentFrame);
+		}
+		this->orc.setScale(1.f, 1.f);
+		this->orc.setOrigin(0.f, 0.f);
+	}
+	else if (this->animState == orc_ANIMATION_STATES::MOVING_RIGHT_orc)
+	{
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
+		{
+			this->currentFrame.top = 90.f;
+			this->currentFrame.left += 60.f;
+			if (this->currentFrame.left >= 480.f)
+				this->currentFrame.left = 0;
+			this->animationTimer.restart();
+			this->orc.setTextureRect(this->currentFrame);
+		}
+		this->orc.setScale(-1.f, 1.f);
+		this->orc.setOrigin(this->orc.getGlobalBounds().width / 3.f, 0.f);
 
-	//}
+	}
 	//else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_UP_orc)
 	//{
 	//	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f)
@@ -301,7 +284,7 @@ void Orc::update_orc()
 void Orc::render_orc(sf::RenderTarget& target)
 {
 	//target.draw(this->hitbox_player);
-	target.draw(this->viewbox_orc);
+	//target.draw(this->viewbox_orc);
 	target.draw(this->orc);
 	//target.draw(circ);
 }

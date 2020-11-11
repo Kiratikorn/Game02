@@ -21,6 +21,7 @@ void Game::initPlayer()
 	this->player = new Player();
 	this->fire = new firer();
 	this->orc_enemy = new Orc();
+	this->fire_above = new Fire_above();
 }
 
 Game::Game()
@@ -236,6 +237,7 @@ void Game::collide()
 void Game::updatePlayer()
 {
 	this->orc_enemy->update_orc();
+	this->fire_above->update_FA();
 	this->player->update();
 
 }
@@ -289,14 +291,13 @@ void Game::renderPlayer()
 {
 	this->fire->render(*this->window);
 	this->orc_enemy->render_orc(*this->window);
+	this->fire_above->render(*this->window);
 	this->player->render(*this->window);
 }
 
 void Game::renderWorld()
 {
 	this->window->draw(this->worldBackground);
-
-	
 }
 
 void Game::render()
