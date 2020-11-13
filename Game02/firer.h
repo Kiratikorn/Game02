@@ -3,9 +3,10 @@
 class firer
 {
 private:
-
-	sf::Sprite sprite;
-	sf::Texture textureSheet;
+	int x = 50.f;
+	sf::Sprite firer_s;
+	sf::Sprite fire_s;
+	sf::Texture firerTex;
 	sf::Texture fireballTex;
 	sf::IntRect currentFrame;
 	void initTexture();
@@ -14,6 +15,8 @@ private:
 public:
 	firer();
 	virtual ~firer();
+	void updateMovement_fire();
+	void update_firer();
 	void render(sf::RenderTarget& target);
 };
 

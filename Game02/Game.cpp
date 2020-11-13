@@ -22,6 +22,7 @@ void Game::initPlayer()
 	this->fire = new firer();
 	this->orc_enemy = new Orc();
 	this->fire_above = new Fire_above();
+	this->boss = new Boss();
 }
 
 Game::Game()
@@ -45,13 +46,13 @@ int Game::Block()
 
 void Game::showBlock()
 {
-	int i = 1, j = 1, x = 90, y = 500;
+	int i = 1, j = 1, x = 100, y = 500;
 
 	if (this->ran == false)
 	{
 		for (i = 1; i < 10; i++)
 		{
-			for (j = 1; j < 5; j++)
+			for (j = 1; j <=5; j++)
 			{
 				Block();
 				if (this->type <=  1)
@@ -81,26 +82,32 @@ void Game::showBlock()
 	{
 		for (i = 1 ;i < 19; i++)
 		{
-			for (j = 1; j < 5; j++)
+			for (j = 1; j <=5 ; j++)
 			{
-				this->terrain[i][j].setScale(0.8f, 0.8f);
+				this->terrain[i][j].setScale(0.75f, 0.75f);
 				this->terrain[i][j].setPosition(x, y);
 				this->window->draw(this->terrain[i][j]);
-				x += 90;
-				if (x >= 500)
+				this->blockCheck.setOutlineColor(sf::Color::Cyan);
+				this->blockCheck.setOutlineThickness(2.f);
+				this->blockCheck.setFillColor(sf::Color::Transparent);
+				this->blockCheck.setPosition(terrain[i][j].getPosition().x, terrain[i][j].getPosition().y);
+				this->blockCheck.setSize(sf::Vector2f(120.f*0.75f, 120.f * 0.75f));
+				if (this->have_terr[i][j] != 0)
 				{
-					x = 90;
-					y += 90;
+					this->window->draw(this->blockCheck);
 				}
+				
+				x += 88;
 				//collision
-				//if (this->player->getGlobalBounds().intersects(terrain[i][j].getGlobalBounds()))
-				//{
-				//	this->player->setPosition(this->player->getPosition().x, this->player->getGlobalBounds().top);
-				//	printf("hit~");
-				//}
+				if (this->player->getGlobalBounds_hit().intersects(blockCheck.getGlobalBounds()))
+				{
+					//this->player->setPosition(this->player->getPosition().x, this->player->getGlobalBounds().top);
+					printf("hit~");
+				}
 
 			}
-
+			x = 100;
+			y += 88;
 		}
 	}
 	
@@ -153,7 +160,6 @@ void Game::enemy_view()
 {
 	if (this->player->getGlobalBounds_hit().intersects(this->orc_enemy->getGlobalBounds_hit_orc()))
 	{
-		printf("hit view");
 		if (this->player->getPosition().x > this->orc_enemy->getPosition().x)
 		{
 			this->orc_enemy->check_move = 2;
@@ -168,7 +174,6 @@ void Game::enemy_view()
 	}
 	else
 	{
-		printf("no?");
 		this->orc_enemy->check_view = false;
 	}
 }
@@ -181,14 +186,14 @@ void Game::enemy_view()
 void Game::updateCollision()
 {
 	//collision buttom
-	if (this->player->getPosition().y + this->player->getGlobalBounds().height > this->window->getSize().y)
-	{
-		this->player->resetVelocityY();
-		this->player->setPosition(
-			this->player->getPosition().x,
-			this->window->getSize().y - this->player->getGlobalBounds().height
-		);
-	}
+	//if (this->player->getPosition().y + this->player->getGlobalBounds().height > this->window->getSize().y)
+	//{
+	//	this->player->resetVelocityY();
+	//	this->player->setPosition(
+	//		this->player->getPosition().x,
+	//		this->window->getSize().y - this->player->getGlobalBounds().height
+	//	);
+	//}
 	//if (this->player->getGlobalBounds().top <= 500.f)
 	//{
 	//	this->player->setPosition(this->player->getPosition().x, 400.f);
@@ -238,6 +243,8 @@ void Game::updatePlayer()
 {
 	this->orc_enemy->update_orc();
 	this->fire_above->update_FA();
+	this->fire->update_firer();
+	this->boss->update_boss();
 	this->player->update();
 
 }
@@ -292,6 +299,7 @@ void Game::renderPlayer()
 	this->fire->render(*this->window);
 	this->orc_enemy->render_orc(*this->window);
 	this->fire_above->render(*this->window);
+	this->boss->render_boss(*this->window);
 	this->player->render(*this->window);
 }
 

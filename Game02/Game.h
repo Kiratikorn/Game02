@@ -3,9 +3,10 @@
 #include <SFML/System.hpp>
 #include "Player.h"
 #include "firer.h"
-#include "Platform.h"
+//#include "Platform.h"
 #include "Orc.h"
 #include "fire_above.h"
+#include "Boss.h"
 //#include "TileMap.h"
 //#include "Map.h"
 class Game
@@ -21,12 +22,13 @@ private:
 	sf::Sprite blockTwo;
 	sf::Texture worldBackgroundTex;
 	sf::Sprite worldBackground;
+	sf::RectangleShape blockCheck;
 
 	Player* player;
 	firer* fire;
 	Orc* orc_enemy;
 	Fire_above* fire_above;
-
+	Boss* boss;
 	bool ran = false;
 
 	//TileMap map;
@@ -65,8 +67,6 @@ public:
 	void render();
 	const sf::RenderWindow & getWindow() const;
 protected:
-	int type;
-	
-	
+	int type;	
 };
 
