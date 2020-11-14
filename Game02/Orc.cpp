@@ -178,7 +178,7 @@ void Orc::updatePhysics_orc()
 
 void Orc::updateMovement_orc()
 {
-	this->animState = orc_ANIMATION_STATES::IDLE_orc; 
+	
 	if (this->check_view==true)
 	{
 		if (this->check_move == 1)

@@ -36,6 +36,7 @@ private:
 public :
 	Player();
 	virtual ~Player();
+	
 	//hitbox_player
 	sf::RectangleShape hitbox_player;
 	sf::CircleShape circ;

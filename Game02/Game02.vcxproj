@@ -26,10 +26,12 @@
     <ClInclude Include="Fire_above.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Hitbox.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Orc.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Score.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
@@ -41,11 +43,13 @@
     <ClCompile Include="Fire_above.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Hitbox.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Orc.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Score.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
   </ItemGroup>

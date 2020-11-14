@@ -46,13 +46,13 @@ int Game::Block()
 
 void Game::showBlock()
 {
-	int i = 1, j = 1, x = 100, y = 500;
+	int i = 0, j = 0, x = 100, y = 500;
 
 	if (this->ran == false)
 	{
-		for (i = 1; i < 10; i++)
+		for (i = 0; i < 10; i++)
 		{
-			for (j = 1; j <=5; j++)
+			for (j = 0; j <=5; j++)
 			{
 				Block();
 				if (this->type <=  1)
@@ -80,20 +80,21 @@ void Game::showBlock()
 
 	if(this->ran == true)
 	{
-		for (i = 1 ;i < 19; i++)
+		for (i = 0 ;i < 19; i++)
 		{
-			for (j = 1; j <=5 ; j++)
+			for (j = 0; j <=4 ; j++)
 			{
 				this->terrain[i][j].setScale(0.75f, 0.75f);
 				this->terrain[i][j].setPosition(x, y);
 				this->window->draw(this->terrain[i][j]);
-				this->blockCheck.setOutlineColor(sf::Color::Cyan);
-				this->blockCheck.setOutlineThickness(2.f);
-				this->blockCheck.setFillColor(sf::Color::Transparent);
-				this->blockCheck.setPosition(terrain[i][j].getPosition().x, terrain[i][j].getPosition().y);
-				this->blockCheck.setSize(sf::Vector2f(120.f*0.75f, 120.f * 0.75f));
+
 				if (this->have_terr[i][j] != 0)
 				{
+					this->blockCheck.setOutlineColor(sf::Color::Cyan);
+					this->blockCheck.setOutlineThickness(2.f);
+					this->blockCheck.setFillColor(sf::Color::Transparent);
+					this->blockCheck.setPosition(terrain[i][j].getPosition().x, terrain[i][j].getPosition().y);
+					this->blockCheck.setSize(sf::Vector2f(120.f * 0.75f, 120.f * 0.75f));
 					this->window->draw(this->blockCheck);
 				}
 				
@@ -101,10 +102,21 @@ void Game::showBlock()
 				//collision
 				if (this->player->getGlobalBounds_hit().intersects(blockCheck.getGlobalBounds()))
 				{
-					//this->player->setPosition(this->player->getPosition().x, this->player->getGlobalBounds().top);
+					this->player->setPosition(this->player->getPosition().x, i*120*0.75+500.f-100.f*0.8);
 					printf("hit~");
 				}
-
+				//plat_left_hit = j * 120.f * 0.8f + 0.f + 90.f - (5.0f * j);
+				//plat_right_hit = j * 120.f * 0.8f + (120.f * 0.8f) - (5.0f * j);
+				//plat_top_hit = i * 120.f * 0.8f + 500.f - (5.0f * i);
+				//plat_bottom_hit = i * 120.f * 0.8f + 500.f + (120.f * 0.8f) - (5.0f * i);
+				//		if (this->player->left_hit < plat_right_hit)
+				//		{
+				//			this->player->setPosition(j * 120.f * 0.8f + 0.f + 90.f - (5.0f * j), (player->getPosition().y));
+				//		}
+				//		if (this->player->right_hit > plat_left_hit)
+				//		{
+				//			this->player->setPosition(j * 120.f * 0.8f + (120.f * 0.8f) - (5.0f * j), (player->getPosition().y));
+				//		}
 			}
 			x = 100;
 			y += 88;
@@ -224,7 +236,6 @@ void Game::collide()
 					this->player->bottom_hit  > plat_top_hit)
 				{
 					this->player->setPosition(player->getPosition().x, i * 120.f * 0.8f + 450.f - (5.0f * i));
-					printf("hit~");
 				}
 				if (this->player->left_hit < plat_right_hit)
 				{
