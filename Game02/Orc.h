@@ -32,7 +32,7 @@ private:
 public:
 	bool check_view=false;
 	int check_move = 0;
-	Orc();
+	Orc(float pos_x,float pos_y);
 	virtual ~Orc();
 	//void spawn_orc();
 	sf::RectangleShape hitbox_orc;

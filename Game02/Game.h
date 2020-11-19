@@ -7,14 +7,16 @@
 #include "Orc.h"
 #include "fire_above.h"
 #include "Boss.h"
+#include "Point.h"
 //#include "TileMap.h"
 //#include "Map.h"
 class Game
 {
 private:
+	int column, row = 0,spawn;
 	sf::RenderWindow* window;
 	sf::Event ev;
-
+	sf::View view;
 	//World
 	sf::Texture one;
 	sf::Texture two;
@@ -27,6 +29,9 @@ private:
 	Player* player;
 	firer* fire;
 	Orc* orc_enemy;
+	std::vector<Point*> coins;
+	std::vector<Orc*> orc_enemies;
+	//std::vector<Orc*> orc_enemy;
 	Fire_above* fire_above;
 	Boss* boss;
 	bool ran = false;
@@ -35,8 +40,12 @@ private:
 	void initWindow();
 	void initWorld();
 	void initPlayer();
-	
+	void initEnemy();
 
+	float spawnTimer;
+	float spawnTimerMax;
+
+	int score=0;
 public:
 	Game();
 	virtual ~Game();
@@ -46,10 +55,14 @@ public:
 	void showBlock();
 	void updateBlock();
 	void enemy_view();
+	void update_enemy();
+	void player_attack();
+
+	void update_coin();
 	//void setPositionBlock(int x, int y);
 	sf::CircleShape test;
-	sf::Sprite terrain[29][10];
-	int have_terr[30][10];
+	sf::Sprite terrain[100][10];
+	int have_terr[100][10];
 	float plat_left_hit;
 	float plat_right_hit;
 	float plat_top_hit;

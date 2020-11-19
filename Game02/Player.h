@@ -39,7 +39,9 @@ public :
 	
 	//hitbox_player
 	sf::RectangleShape hitbox_player;
+	sf::RectangleShape nextbox_player;
 	sf::CircleShape circ;
+	bool attack= false;
 	void hitbox_P();
 	float bottom_hit;
 	float left_hit;
@@ -53,6 +55,7 @@ public :
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds() const;
 	const sf::FloatRect getGlobalBounds_hit() const;
+	const sf::FloatRect getGlobalBounds_next() const;
 	//sf::Transformable move;
 
 	void setPosition(const sf::Vector2f pos);

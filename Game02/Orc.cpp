@@ -1,10 +1,12 @@
 
 #include"Orc.h"
-Orc::Orc()
+Orc::Orc(float pos_x, float pos_y)
 {
 	this->initVariables();
 	this->initTexture();
 	this->initSprite();
+	this->orc.setPosition(pos_x, pos_y);
+
 	//this->initPhysics();
 }
 
@@ -22,7 +24,6 @@ Orc::~Orc()
 void Orc::initVariables()
 {
 	this->animState = orc_ANIMATION_STATES::IDLE_orc;
-	//this->moving = false;
 }
 
 void Orc::initTexture()
@@ -36,7 +37,7 @@ void Orc::initSprite()
 	this->orc.setTexture(this->OrcTex);
 	this->currentFrame = sf::IntRect(0, 0, 58, 57);//x,y,w,h
 	this->orc.setTextureRect(this->currentFrame);
-	this->orc.setPosition(300.f, 600.f);
+	//this->orc.setPosition(300.f, 600.f);
 	this->orc.setScale(1.0f, 1.0f);
 }
 
@@ -51,7 +52,7 @@ void Orc::initPhysics()
 	this->velocityMax = 6.f;
 	this->velocityMin = 1.f;
 	this->acceleration = 3.f;
-	this->drag = 0.90f;
+	this->drag = 0.94f;
 	this->gravity_orc = 0.f;
 	this->velocityMaxY = 15.f;
 }
@@ -178,7 +179,7 @@ void Orc::updatePhysics_orc()
 
 void Orc::updateMovement_orc()
 {
-	
+	this->animState= orc_ANIMATION_STATES::IDLE_orc;
 	if (this->check_view==true)
 	{
 		if (this->check_move == 1)
@@ -284,7 +285,7 @@ void Orc::update_orc()
 void Orc::render_orc(sf::RenderTarget& target)
 {
 	//target.draw(this->hitbox_player);
-	//target.draw(this->viewbox_orc);
+	target.draw(this->viewbox_orc);
 	target.draw(this->orc);
 	//target.draw(circ);
 }
