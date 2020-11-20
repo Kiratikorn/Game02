@@ -39,12 +39,6 @@
     <ClInclude Include="Hitbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Platform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Orc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -87,12 +81,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Hitbox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Orc.cpp">

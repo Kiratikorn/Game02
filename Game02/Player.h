@@ -1,10 +1,8 @@
 #pragma once
 #include <SFML\Graphics.hpp>
-#include "Entity.h"
-#include "Platform.h"
 
 enum PLAYER_ANIMATION_STATES { IDLE = 0, MOVING_LEFT, MOVING_RIGHT, MOVING_UP, DIG, ATTACK};
-class Player : public Entity
+class Player
 {
 private:
 	
