@@ -3,7 +3,7 @@
 
 void Game::initWindow()
 {
-	this->window = new sf::RenderWindow(sf::VideoMode(650, 900), "Tower Escape", sf::Style::Close | sf::Style::Titlebar);
+	this->window = new sf::RenderWindow(sf::VideoMode(650, 800), "Tower Escape", sf::Style::Close | sf::Style::Titlebar);
 	this->window->setFramerateLimit(60);
 }
 
@@ -31,6 +31,11 @@ void Game::initEnemy()
 	this->spawnTimer = this->spawnTimerMax;
 }
 
+void Game::deleteblock()
+{
+	//if(this->player->getPosition().y>=blocks[i].getposition)
+}
+
 Game::Game()
 {
 	this->initWindow();
@@ -50,9 +55,13 @@ Game::~Game()
 	{
 		delete i;
 	}
+	for (auto* i : this->blocks)
+	{
+		delete i;
+	}
 }
 
-int Game::Block()
+int Game::Block_ran()
 {
 	this->type = rand() % 4;
 	return type;
@@ -71,15 +80,15 @@ void Game::showBlock()
 				for (row = 0; row <= 5; row++)
 				{
 
-					Block();
+					Block_ran();
 					if (this->type <= 1)
 					{
-						this->terrain[column][row].setTexture(one);
+						//this->terrain[column][row].setTexture(one);
 						this->have_terr[column][row] = 1;
 					}
 					else if (this->type == 2)
 					{
-						this->terrain[column][row].setTexture(two);
+						//this->terrain[column][row].setTexture(two);
 						this->have_terr[column][row] = 2;
 					}
 					else if (this->type == 3)
@@ -104,26 +113,30 @@ void Game::showBlock()
 	{
 		for (column = 0; column < 50; column++)
 		{
-			if (this->player->getPosition().y + 400.f >= column * 120.f * 0.75 + 500.f )
+			if (this->player->getPosition().y + 400.f >= column * 120.f * 0.75 + 500.f)
 			{
 				for (row = 0; row <= 4; row++)
 				{
-					this->terrain[column][row].setScale(0.75f, 0.75f);
-					this->terrain[column][row].setPosition(x, y);
-					this->window->draw(this->terrain[column][row]);
+					
+					//this->terrain[column][row].setScale(0.75f, 0.75f);
+					//this->terrain[column][row].setPosition(x, y);
+					
+					//this->window->draw(this->terrain[column][row]);
 
-					if (this->have_terr[column][row] != 0)
+					if (this->have_terr[column][row] == 1)
 					{
-						this->blockCheck.setOutlineColor(sf::Color::Cyan);
-						this->blockCheck.setOutlineThickness(2.f);
-						this->blockCheck.setFillColor(sf::Color::Transparent);
-						this->blockCheck.setPosition(terrain[column][row].getPosition().x, terrain[column][row].getPosition().y);
-						this->blockCheck.setSize(sf::Vector2f(120.f * 0.75f, 120.f * 0.75f));
-						this->window->draw(this->blockCheck);
+
+						this->blocks.push_back(new Block(x, y));
+						//this->blockCheck.setOutlineColor(sf::Color::Cyan);
+						//this->blockCheck.setOutlineThickness(2.f);
+						//this->blockCheck.setFillColor(sf::Color::Transparent);
+						//this->blockCheck.setPosition(x, y);
+						//this->blockCheck.setSize(sf::Vector2f(120.f * 0.75f, 120.f * 0.75f));
+						//this->window->draw(this->blockCheck);
 					}
 					else if (have_terr[column][row] == 0)
 					{
-						this->coins.push_back(new Point(terrain[column][row].getPosition().x+20.f, terrain[column][row].getPosition().y+30.f));
+						this->coins.push_back(new Point(x+20.f, y+30.f));
 					}
 
 					x += 88;
@@ -154,15 +167,42 @@ void Game::showBlock()
 			}
 		}
 	}
-	if (column == 99)
-	{
-		column = 0;
-	}
-	test.setFillColor(sf::Color::Red);
-	test.setRadius(2.f);
-	test.setPosition(90.f + (120.f * 0.8f) - 5.f, 500.f + (120.f * 0.8f) - 5.0f*2);
-	this->window->draw(this->test);
 
+
+}
+
+void Game::createBlock()
+{
+
+	if (this->player->getPosition().y+300.f>=this->y-200.f)
+	{
+
+		for (row = 0; row < 5; row++)
+		{
+			Block_ran();
+			if (this->type <= 1)
+			{
+				this->blocks.push_back(new Block(x, y));
+			}
+			else if (this->type == 2)
+			{
+				this->coins.push_back(new Point(x + 20.f, y + 30.f));
+			}
+			else if (this->type == 3)
+			{
+
+				this->have_terr[column][row] = 0;
+			}
+			x += 88;
+			printf("%d\n", x);
+		}
+		//if (x >= 452)
+		//{
+			y += 88;
+			x = 100;
+		//}
+		
+	}
 }
 
 void Game::updateBlock()
@@ -236,7 +276,6 @@ void Game::update_enemy()
 
 	for (int i = 0; i < this->orc_enemies.size(); ++i)
 	{
-		{
 
 			if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_hit_orc()))
 			{
@@ -249,15 +288,31 @@ void Game::update_enemy()
 					orc_enemies[i]->check_move = 1;
 				}
 				orc_enemies[i]->check_view = true;
-
-
 			}
 			else
 			{
 				orc_enemies[i]->check_view = false;
 			}
 			orc_enemies[i]->update_orc();
+	}
+}
+
+void Game::update_block()
+{
+	//this->blocks.push_back(new Block());
+	for (int i = 0; i < this->blocks.size(); ++i)
+	{
+		if (this->player->getGlobalBounds_hit().intersects(this->blocks[i]->getGlobalBounds()))
+		{
+			printf("blockhit");
 		}
+		if (this->player->getPosition().y - 400.f >= this->blocks[i]->getPosition().y)
+		{
+			this->blocks.erase(this->blocks.begin() + i);
+		}
+		//blocks[i]->count++;
+		blocks[i]->update();
+
 	}
 }
 
@@ -284,9 +339,12 @@ void Game::update_coin()
 		if (this->player->getGlobalBounds_hit().intersects(this->coins[i]->getGlobalBounds_coin()))
 		{
 			this->coins.erase(this->coins.begin()+i);
-			this->score+=5;
-			printf("%d\n", score);
-			
+			//this->score+=5;
+			//printf("%d\n", score);
+		}
+		if (this->player->getPosition().y - 400.f >= this->coins[i]->getPosition().y)
+		{
+			this->coins.erase(this->coins.begin() + i);
 		}
 	}
 }
@@ -395,7 +453,8 @@ void Game::update()
 			this->player->resetAnimationTimer();
 		}
 	}
-	/*this->update_enemy();*/
+	//this->update_enemy();
+	this->update_block();
 
 	this->player_attack();
 
@@ -412,6 +471,7 @@ void Game::update()
 
 void Game::renderPlayer()
 {
+
 	this->fire->render(*this->window);
 	//this->orc_enemy->render_orc(*this->window);
 		for (auto* enemy : this->orc_enemies)
@@ -422,6 +482,7 @@ void Game::renderPlayer()
 		{
 			coin->render(*this->window);
 		}
+
 	this->fire_above->render(*this->window);
 	this->boss->render_boss(*this->window);
 	this->player->render(*this->window);
@@ -439,7 +500,12 @@ void Game::render()
 	//draw world
 
 	this->renderWorld();
-	this->showBlock();
+	//this->showBlock();
+	this->createBlock();
+	for (auto* block : this->blocks)
+	{
+		block->render(*this->window);
+	}
 	this->renderPlayer();
 
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));

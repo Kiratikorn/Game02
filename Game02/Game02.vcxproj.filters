@@ -27,16 +27,7 @@
     <ClInclude Include="TileMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="firer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Hitbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Orc.h">
@@ -52,6 +43,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,16 +65,7 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Block.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="firer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Hitbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Orc.cpp">
@@ -96,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Point.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

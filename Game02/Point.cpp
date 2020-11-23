@@ -22,6 +22,11 @@ Point::~Point()
 {
 }
 
+const sf::Vector2f Point::getPosition() const
+{
+	return this->coin.getPosition();
+}
+
 const sf::FloatRect Point::getGlobalBounds_coin() const
 {
 	return this->coin.getGlobalBounds();

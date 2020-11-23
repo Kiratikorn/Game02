@@ -8,11 +8,13 @@
 #include "fire_above.h"
 #include "Boss.h"
 #include "Point.h"
+#include "Block.h"
 //#include "TileMap.h"
 //#include "Map.h"
 class Game
 {
 private:
+	int x = 100, y = 500;
 	int column, row = 0,spawn;
 	sf::RenderWindow* window;
 	sf::Event ev;
@@ -28,9 +30,10 @@ private:
 
 	Player* player;
 	firer* fire;
-	Orc* orc_enemy;
+	//Orc* orc_enemy;
 	std::vector<Point*> coins;
 	std::vector<Orc*> orc_enemies;
+	std::vector<Block*> blocks;
 	//std::vector<Orc*> orc_enemy;
 	Fire_above* fire_above;
 	Boss* boss;
@@ -41,6 +44,8 @@ private:
 	void initWorld();
 	void initPlayer();
 	void initEnemy();
+	void deleteblock();
+	int BlockX = 100, BlockY = 500;
 
 	float spawnTimer;
 	float spawnTimerMax;
@@ -50,12 +55,15 @@ public:
 	Game();
 	virtual ~Game();
 	
-	int Block();
+	
+	int Block_ran();
 	void showMap();
 	void showBlock();
+	void createBlock();
 	void updateBlock();
 	void enemy_view();
 	void update_enemy();
+	void update_block();
 	void player_attack();
 
 	void update_coin();
