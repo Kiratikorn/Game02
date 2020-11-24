@@ -55,15 +55,23 @@ Game::~Game()
 	{
 		delete i;
 	}
-	for (auto* i : this->blocks)
+	for (auto* i : this->dirtBlocks)
 	{
 		delete i;
 	}
+	for (auto* i : this->stoneBlocks)
+	{
+		delete i;
+	}
+	//for (auto* i : this->blocks)
+	//{
+	//	delete i;
+	//}
 }
 
 int Game::Block_ran()
 {
-	this->type = rand() % 4;
+	this->type = rand() % 9;
 	return type;
 }
 
@@ -126,7 +134,7 @@ void Game::showBlock()
 					if (this->have_terr[column][row] == 1)
 					{
 
-						this->blocks.push_back(new Block(x, y));
+						//this->blocks.push_back(new Block(x, y));
 						//this->blockCheck.setOutlineColor(sf::Color::Cyan);
 						//this->blockCheck.setOutlineThickness(2.f);
 						//this->blockCheck.setFillColor(sf::Color::Transparent);
@@ -180,21 +188,28 @@ void Game::createBlock()
 		for (row = 0; row < 5; row++)
 		{
 			Block_ran();
-			if (this->type <= 1)
+			if (this->type <= 3)
 			{
-				this->blocks.push_back(new Block(x, y));
+				this->dirtBlocks.push_back(new Block_dirt(x, y));
 			}
-			else if (this->type == 2)
+			else if (this->type == 4)
+			{
+				this->stoneBlocks.push_back(new Block_Stone(x, y));
+			}
+			else if (this->type == 5)
+			{
+				this->orc_enemies.push_back(new Orc(x,y));
+
+			}
+			else if (this->type == 6)
 			{
 				this->coins.push_back(new Point(x + 20.f, y + 30.f));
 			}
-			else if (this->type == 3)
+			else
 			{
 
-				this->have_terr[column][row] = 0;
 			}
 			x += 88;
-			printf("%d\n", x);
 		}
 		//if (x >= 452)
 		//{
@@ -279,6 +294,7 @@ void Game::update_enemy()
 
 			if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_hit_orc()))
 			{
+
 				if (this->player->getPosition().x > this->orc_enemies[i]->getPosition().x)
 				{
 					orc_enemies[i]->check_move = 2;
@@ -293,6 +309,11 @@ void Game::update_enemy()
 			{
 				orc_enemies[i]->check_view = false;
 			}
+			if (this->player->getPosition().y - 400.f >= this->orc_enemies[i]->getPosition().y)
+			{
+				this->orc_enemies.erase(this->orc_enemies.begin() + i);
+				//std::cout << this->player->getPosition().y << " : " << this->orc_enemies[i]->getPosition().y<<"\n";
+			}
 			orc_enemies[i]->update_orc();
 	}
 }
@@ -300,19 +321,110 @@ void Game::update_enemy()
 void Game::update_block()
 {
 	//this->blocks.push_back(new Block());
-	for (int i = 0; i < this->blocks.size(); ++i)
+	/*for (int i = 0; i < this->blocks.size(); ++i)
 	{
+
 		if (this->player->getGlobalBounds_hit().intersects(this->blocks[i]->getGlobalBounds()))
 		{
-			printf("blockhit");
+			this->player->setPosition(this->player->getPosition().x, this->blocks[i]->getPosition().y-88.f);
 		}
 		if (this->player->getPosition().y - 400.f >= this->blocks[i]->getPosition().y)
 		{
 			this->blocks.erase(this->blocks.begin() + i);
 		}
-		//blocks[i]->count++;
+		if (this->player->digdown == true)
+		{
+			if (this->player->getGlobalBounds_down().intersects(blocks[i]->getGlobalBounds()))
+			{
+				this->blocks.erase(this->blocks.begin() + i);
+			}
+		}
+		if (this->player->digup == true)
+		{
+			if (this->player->getGlobalBounds_up().intersects(blocks[i]->getGlobalBounds()))
+			{
+				this->blocks.erase(this->blocks.begin() + i);
+			}
+		}
+		if (this->player->digdown == true)
+		{
+			if (this->player->getGlobalBounds_down().intersects(blocks[i]->getGlobalBounds()))
+			{
+				this->blocks.erase(this->blocks.begin() + i);
+			}
+		}
+		if (this->player->attack == true)
+		{
+			if (this->player->getGlobalBounds_next().intersects(blocks[i]->getGlobalBounds()))
+			{
+				this->blocks.erase(this->blocks.begin() + i);
+			}
+		}
 		blocks[i]->update();
 
+	}*/
+}
+
+void Game::update_dirtBlock()
+{
+	for (int i = 0; i < this->dirtBlocks.size(); ++i)
+	{
+
+		if (this->player->getGlobalBounds_hit().intersects(this->dirtBlocks[i]->getGlobalBounds()))
+		{
+			this->player->setPosition(this->player->getPosition().x, this->dirtBlocks[i]->getPosition().y - 88.f);
+		}
+		if (this->player->getPosition().y - 400.f >= this->dirtBlocks[i]->getPosition().y)
+		{
+			this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
+		}
+		if (this->player->digdown == true)
+		{
+			if (this->player->getGlobalBounds_down().intersects(dirtBlocks[i]->getGlobalBounds()))
+			{
+				this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
+			}
+		}
+		if (this->player->digup == true)
+		{
+			if (this->player->getGlobalBounds_up().intersects(dirtBlocks[i]->getGlobalBounds()))
+			{
+				this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
+			}
+		}
+		if (this->player->digdown == true)
+		{
+			if (this->player->getGlobalBounds_down().intersects(dirtBlocks[i]->getGlobalBounds()))
+			{
+				this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
+			}
+		}
+		if (this->player->attack == true)
+		{
+			if (this->player->getGlobalBounds_next().intersects(dirtBlocks[i]->getGlobalBounds()))
+			{
+				this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
+			}
+		}
+		dirtBlocks[i]->update();
+
+	}
+}
+
+void Game::update_stoneBlock()
+{
+	for (int i = 0; i < this->stoneBlocks.size(); ++i)
+	{
+		if (this->player->getGlobalBounds_hit().intersects(this->stoneBlocks[i]->getGlobalBounds()))
+		{
+			this->player->setPosition(this->player->getPosition().x, this->stoneBlocks[i]->getPosition().y - 88.f);
+		}
+		if (this->player->getPosition().y - 400.f >= this->stoneBlocks[i]->getPosition().y)
+		{
+			this->stoneBlocks.erase(this->stoneBlocks.begin() + i);
+		}
+
+		stoneBlocks[i]->update();
 	}
 }
 
@@ -339,8 +451,8 @@ void Game::update_coin()
 		if (this->player->getGlobalBounds_hit().intersects(this->coins[i]->getGlobalBounds_coin()))
 		{
 			this->coins.erase(this->coins.begin()+i);
-			//this->score+=5;
-			//printf("%d\n", score);
+			this->score+=5;
+			printf("%d\n", score);
 		}
 		if (this->player->getPosition().y - 400.f >= this->coins[i]->getPosition().y)
 		{
@@ -453,12 +565,15 @@ void Game::update()
 			this->player->resetAnimationTimer();
 		}
 	}
-	//this->update_enemy();
-	this->update_block();
+	this->update_enemy();
+
+	//this->update_block();
+	this->update_dirtBlock();
+	this->update_stoneBlock();
 
 	this->player_attack();
 
-	this->updateBlock();
+	//this->updateBlock();
 
 	this->updatePlayer();
 
@@ -502,9 +617,17 @@ void Game::render()
 	this->renderWorld();
 	//this->showBlock();
 	this->createBlock();
-	for (auto* block : this->blocks)
+	//for (auto* block : this->blocks)
+	//{
+	//	block->render(*this->window);
+	//}
+	for (auto* dirtblock : this->dirtBlocks)
 	{
-		block->render(*this->window);
+		dirtblock->render(*this->window);
+	}
+	for (auto* stoneblock : this->stoneBlocks)
+	{
+		stoneblock->render(*this->window);
 	}
 	this->renderPlayer();
 

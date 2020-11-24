@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <stdio.h>
 
+
 void Player::initVariables()
 {
 	this->animState = PLAYER_ANIMATION_STATES::IDLE;
@@ -35,7 +36,7 @@ void Player::initPhysics()
 	this->velocityMin = 1.f;
 	this->acceleration = 3.f;
 	this->drag = 0.90f;
-	this->gravity_player = 0.f;
+	this->gravity_player = 2.f;
 	this->velocityMaxY = 15.f;
 }
 
@@ -60,8 +61,16 @@ void Player::hitbox_P()
 
 	nextbox_player.setOutlineColor(sf::Color::Green);
 	nextbox_player.setOutlineThickness(2.0f);
-	nextbox_player.setSize(sf::Vector2f(80.f, 50.f));
+	nextbox_player.setSize(sf::Vector2f(80.f, 40.f));
 	nextbox_player.setPosition(this->sprite.getPosition().x + 20.f, this->sprite.getPosition().y + 25.f);
+
+	upbox_player.setFillColor(sf::Color::Blue);
+	upbox_player.setSize(sf::Vector2f(40.f, 70.f));
+	upbox_player.setPosition(this->sprite.getPosition().x+13.f, this->sprite.getPosition().y - 50.f);
+
+	downbox_player.setFillColor(sf::Color::Red);
+	downbox_player.setSize(sf::Vector2f(40.f, 50.f));
+	downbox_player.setPosition(this->sprite.getPosition().x + 13.f, this->sprite.getPosition().y + 60.f);
 
 	circ.setFillColor(sf::Color::Red);
 	circ.setRadius(2.f);
@@ -97,6 +106,16 @@ const sf::FloatRect Player::getGlobalBounds_hit() const
 const sf::FloatRect Player::getGlobalBounds_next() const
 {
 	return this->nextbox_player.getGlobalBounds();
+}
+
+const sf::FloatRect Player::getGlobalBounds_up() const
+{
+	return this->upbox_player.getGlobalBounds();
+}
+
+const sf::FloatRect Player::getGlobalBounds_down() const
+{
+	return this->downbox_player.getGlobalBounds();
 }
 
 void Player::setPosition(const sf::Vector2f pos)
@@ -175,6 +194,10 @@ void Player::updatePhysics()
 void Player::updateMovement()
 {
 	this->animState = PLAYER_ANIMATION_STATES::IDLE;
+	this->attack = false;
+	this->digdown = false;
+	this->digup = false;
+	delaydig = time_dig.getElapsedTime().asSeconds();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
 		this->move_x(-1.0f, 0.f);
@@ -187,17 +210,28 @@ void Player::updateMovement()
 
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 	{
-		sprite.move(0.f, -5.f);
+		//sprite.move(0.f, -5.f);
+		if (delaydig >= 1.f)
+		{
+			this->digup = true;
+			time_dig.restart();
+		}
 		this->animState = PLAYER_ANIMATION_STATES::MOVING_UP;
 	}
+	
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 	{
-		sprite.move(0.f, 5.f);
+		//sprite.move(0.f, 5.f);
+		if (delaydig >=1.f)
+		{
+			this->digdown = true;
+			time_dig.restart();
+		}
 		this->animState = PLAYER_ANIMATION_STATES::DIG;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 	{
-		attack = true;
+		this->attack = true;
 		this->animState = PLAYER_ANIMATION_STATES::ATTACK;
 	}
 }
@@ -232,6 +266,8 @@ void Player::updateAnimations()
 		this->sprite.setOrigin(0.f, 0.f);
 		this->hitbox_player.setScale(1.f, 1.f);
 		this->nextbox_player.setScale(1.f, 1.f);
+		this->upbox_player.setScale(1.f, 1.f);
+		this->downbox_player.setScale(1.f, 1.f);
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_LEFT)
 	{
@@ -248,6 +284,8 @@ void Player::updateAnimations()
 		this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 3.f, 0.f);
 		this->hitbox_player.setScale(-1.f, 1.f);
 		this->nextbox_player.setScale(-1.f, 1.f);
+		this->downbox_player.setScale(-1.f, 1.f);
+		this->upbox_player.setScale(-1.f, 1.f);
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_UP)
 	{
@@ -263,7 +301,7 @@ void Player::updateAnimations()
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::DIG)
 	{
-		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f)
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.25f)
 		{
 			this->currentFrame.top = 890.f;
 			this->currentFrame.left += 150.f;
@@ -275,7 +313,7 @@ void Player::updateAnimations()
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::ATTACK)
 	{
-		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.2f)
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.15f)
 		{
 			this->currentFrame.top = 500.f;
 			this->currentFrame.left += 150.f;
@@ -301,6 +339,8 @@ void Player::render(sf::RenderTarget& target)
 {
 	target.draw(this->hitbox_player);
 	target.draw(this->nextbox_player);
+	target.draw(this->upbox_player);
+	target.draw(this->downbox_player);
 	target.draw(this->sprite);
 
 

@@ -101,7 +101,7 @@ void Boss::updateMovement_boss()
 			boss.move(2.f, 0.f);
 			this->fly_animation = false;
 			//this->idle_anim = true;
-			printf("stop");
+			//printf("stop");
 		}
 	}
 

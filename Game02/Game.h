@@ -8,7 +8,11 @@
 #include "fire_above.h"
 #include "Boss.h"
 #include "Point.h"
-#include "Block.h"
+//#include "Block.h"
+#include "Block_dirt.h"
+#include "Block_Stone.h"
+
+#include <iostream>
 //#include "TileMap.h"
 //#include "Map.h"
 class Game
@@ -33,7 +37,9 @@ private:
 	//Orc* orc_enemy;
 	std::vector<Point*> coins;
 	std::vector<Orc*> orc_enemies;
-	std::vector<Block*> blocks;
+	std::vector<Block_dirt*> dirtBlocks;
+	std::vector<Block_Stone*> stoneBlocks;
+	//std::vector<Block*> blocks;
 	//std::vector<Orc*> orc_enemy;
 	Fire_above* fire_above;
 	Boss* boss;
@@ -64,6 +70,8 @@ public:
 	void enemy_view();
 	void update_enemy();
 	void update_block();
+	void update_dirtBlock();
+	void update_stoneBlock();
 	void player_attack();
 
 	void update_coin();

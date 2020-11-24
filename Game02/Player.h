@@ -10,6 +10,10 @@ private:
 	sf :: Texture textureSheet;
 	//bool moving;
 	sf::Clock animationTimer;
+	sf::Clock time_dig;
+	sf::Clock time_attact;
+	float delayAttack;
+	float delaydig;
 
 	//animation
 	short animState;
@@ -38,8 +42,12 @@ public :
 	//hitbox_player
 	sf::RectangleShape hitbox_player;
 	sf::RectangleShape nextbox_player;
+	sf::RectangleShape upbox_player;
+	sf::RectangleShape downbox_player;
 	sf::CircleShape circ;
 	bool attack= false;
+	bool digdown = false;
+	bool digup = false;
 	void hitbox_P();
 	float bottom_hit;
 	float left_hit;
@@ -54,6 +62,8 @@ public :
 	const sf::FloatRect getGlobalBounds() const;
 	const sf::FloatRect getGlobalBounds_hit() const;
 	const sf::FloatRect getGlobalBounds_next() const;
+	const sf::FloatRect getGlobalBounds_up() const;
+	const sf::FloatRect getGlobalBounds_down() const;
 	//sf::Transformable move;
 
 	void setPosition(const sf::Vector2f pos);

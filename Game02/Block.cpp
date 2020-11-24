@@ -15,8 +15,10 @@ void Block::initTexture()
 
 void Block::initSprite()
 {
-	this->block1.setTexture(this->block1Tex);
-	this->block2.setTexture(this->block2Tex);
+	/*this->block1.setTexture(this->block1Tex);
+	this->block2.setTexture(this->block2Tex);*/
+	//this->ter.setScale(0.75, 0.75);
+	//this->ter.setTexture(block1Tex);
 
 }
 
@@ -112,7 +114,7 @@ const sf::Vector2f Block::getPosition() const
 
 const sf::FloatRect Block::getGlobalBounds() const
 {
-	return this->blockCheck.getGlobalBounds();
+	return this->ter.getGlobalBounds();
 }
 
 void Block::update()
