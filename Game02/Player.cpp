@@ -59,10 +59,14 @@ void Player::hitbox_P()
 	hitbox_player.setSize(sf::Vector2f(40.f, 50.f));
 	hitbox_player.setPosition(this->sprite.getPosition().x+13.f,this->sprite.getPosition().y+25.f);
 
-	nextbox_player.setOutlineColor(sf::Color::Green);
-	nextbox_player.setOutlineThickness(2.0f);
-	nextbox_player.setSize(sf::Vector2f(80.f, 40.f));
-	nextbox_player.setPosition(this->sprite.getPosition().x + 20.f, this->sprite.getPosition().y + 25.f);
+	attackbox_player.setOutlineColor(sf::Color::Green);
+	attackbox_player.setOutlineThickness(2.0f);
+	attackbox_player.setSize(sf::Vector2f(80.f, 40.f));
+	attackbox_player.setPosition(this->sprite.getPosition().x + 20.f, this->sprite.getPosition().y + 25.f);
+
+	nextbox_player.setFillColor(sf::Color::Black);
+	nextbox_player.setSize(sf::Vector2f(20.f, 40.f));
+	nextbox_player.setPosition(this->sprite.getPosition().x + 50.f, this->sprite.getPosition().y + 25.f);
 
 	upbox_player.setFillColor(sf::Color::Blue);
 	upbox_player.setSize(sf::Vector2f(40.f, 70.f));
@@ -106,6 +110,11 @@ const sf::FloatRect Player::getGlobalBounds_hit() const
 const sf::FloatRect Player::getGlobalBounds_next() const
 {
 	return this->nextbox_player.getGlobalBounds();
+}
+
+const sf::FloatRect Player::getGlobalBounds_attack() const
+{
+	return this->attackbox_player.getGlobalBounds();
 }
 
 const sf::FloatRect Player::getGlobalBounds_up() const
@@ -198,6 +207,7 @@ void Player::updateMovement()
 	this->digdown = false;
 	this->digup = false;
 	delaydig = time_dig.getElapsedTime().asSeconds();
+	delayAttack = time_attack.getElapsedTime().asSeconds();
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
 	{
 		this->move_x(-1.0f, 0.f);
@@ -231,8 +241,13 @@ void Player::updateMovement()
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 	{
-		this->attack = true;
+		if (delayAttack >= 1.f)
+		{
+			this->attack = true;
+			time_attack.restart();
+		}
 		this->animState = PLAYER_ANIMATION_STATES::ATTACK;
+		
 	}
 }
 
@@ -265,9 +280,15 @@ void Player::updateAnimations()
 		this->sprite.setScale(0.8f, 0.8f);
 		this->sprite.setOrigin(0.f, 0.f);
 		this->hitbox_player.setScale(1.f, 1.f);
+		this->hitbox_player.setOrigin(0.f, 0.f);
+		this->attackbox_player.setScale(1.f, 1.f);
+		this->attackbox_player.setOrigin(0.f, 0.f);
 		this->nextbox_player.setScale(1.f, 1.f);
+		this->nextbox_player.setOrigin(0.f, 0.f);
 		this->upbox_player.setScale(1.f, 1.f);
+		this->upbox_player.setOrigin(0.f, 0.f);
 		this->downbox_player.setScale(1.f, 1.f);
+		this->downbox_player.setOrigin(0.f, 0.f);
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_LEFT)
 	{
@@ -281,11 +302,17 @@ void Player::updateAnimations()
 			this->sprite.setTextureRect(this->currentFrame);
 		}
 		this->sprite.setScale(-0.8f, 0.8f);
-		this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 3.f, 0.f);
+		this->sprite.setOrigin(this->sprite.getGlobalBounds().width / 3.f+50.f, 0.f);
 		this->hitbox_player.setScale(-1.f, 1.f);
+		this->hitbox_player.setOrigin(this->hitbox_player.getGlobalBounds().width / 3.f + 28.f, 0.f);
+		this->attackbox_player.setScale(-1.f, 1.f);
+		this->attackbox_player.setOrigin(this->attackbox_player.getGlobalBounds().width / 3.f, 0.f);
 		this->nextbox_player.setScale(-1.f, 1.f);
+		this->nextbox_player.setOrigin(this->nextbox_player.getGlobalBounds().width / 3.f - 40.f, 0.f);
 		this->downbox_player.setScale(-1.f, 1.f);
+		this->downbox_player.setOrigin(this->downbox_player.getGlobalBounds().width / 3.f + 30.f, 0.f);
 		this->upbox_player.setScale(-1.f, 1.f);
+		this->upbox_player.setOrigin(this->upbox_player.getGlobalBounds().width / 3.f + 30.f, 0.f);
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_UP)
 	{
@@ -337,10 +364,13 @@ void Player::update()
 
 void Player::render(sf::RenderTarget& target)
 {
-	target.draw(this->hitbox_player);
-	target.draw(this->nextbox_player);
-	target.draw(this->upbox_player);
+	
+	//target.draw(this->attackbox_player);
+	//target.draw(this->upbox_player);
 	target.draw(this->downbox_player);
+	//target.draw(this->nextbox_player);
+	//target.draw(this->hitbox_player);
+	//target.draw(this->nextbox_player);
 	target.draw(this->sprite);
 
 

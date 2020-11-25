@@ -38,5 +38,6 @@ void Block_Stone::update()
 
 void Block_Stone::render(sf::RenderTarget& target)
 {
+	
 	target.draw(this->stone);
 }

@@ -1,24 +1,20 @@
 #pragma once
 #include <SFML\Graphics.hpp>
-class firer
+class Fire
 {
 private:
-	int x = 50.f;
-	sf::Sprite firer_s;
+	int x ;
 	sf::Sprite fire_s;
-	sf::Texture firerTex;
 	sf::Texture fireballTex;
-	sf::IntRect currentFrame;
 	void initTexture();
 	void initSprite();
-	void fireball();
 public:
-	firer(float pos_x, float pos_y);
-	virtual ~firer();
+	Fire(float pos_x, float pos_y);
+	virtual ~Fire();
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds() const;
 	void updateMovement_fire();
-	void update_firer();
+	void update_fire();
 	void render(sf::RenderTarget& target);
 };
 

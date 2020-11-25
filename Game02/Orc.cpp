@@ -285,7 +285,7 @@ void Orc::update_orc()
 void Orc::render_orc(sf::RenderTarget& target)
 {
 	//target.draw(this->hitbox_player);
-	target.draw(this->viewbox_orc);
+	//target.draw(this->viewbox_orc);
 	target.draw(this->orc);
 	//target.draw(circ);
 }

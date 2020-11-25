@@ -11,7 +11,7 @@ private:
 	//bool moving;
 	sf::Clock animationTimer;
 	sf::Clock time_dig;
-	sf::Clock time_attact;
+	sf::Clock time_attack;
 	float delayAttack;
 	float delaydig;
 
@@ -42,6 +42,7 @@ public :
 	//hitbox_player
 	sf::RectangleShape hitbox_player;
 	sf::RectangleShape nextbox_player;
+	sf::RectangleShape attackbox_player;
 	sf::RectangleShape upbox_player;
 	sf::RectangleShape downbox_player;
 	sf::CircleShape circ;
@@ -62,6 +63,7 @@ public :
 	const sf::FloatRect getGlobalBounds() const;
 	const sf::FloatRect getGlobalBounds_hit() const;
 	const sf::FloatRect getGlobalBounds_next() const;
+	const sf::FloatRect getGlobalBounds_attack() const;
 	const sf::FloatRect getGlobalBounds_up() const;
 	const sf::FloatRect getGlobalBounds_down() const;
 	//sf::Transformable move;
