@@ -24,6 +24,8 @@
     <ClInclude Include="Block_Stone.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="Fire.h" />
+    <ClInclude Include="Fireball.h" />
+    <ClInclude Include="fireBeam.h" />
     <ClInclude Include="firer.h" />
     <ClInclude Include="Fire_above.h" />
     <ClInclude Include="Game.h" />
@@ -40,6 +42,8 @@
     <ClCompile Include="Block_Stone.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Fire.cpp" />
+    <ClCompile Include="Fireball.cpp" />
+    <ClCompile Include="fireBeam.cpp" />
     <ClCompile Include="firer.cpp" />
     <ClCompile Include="Fire_above.cpp" />
     <ClCompile Include="Game.cpp" />

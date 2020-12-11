@@ -226,5 +226,5 @@ void Boss::update_boss()
 
 void Boss::render_boss(sf::RenderTarget& target)
 {
-	target.draw(this->boss);
+	//target.draw(this->boss);
 }

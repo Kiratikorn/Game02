@@ -73,8 +73,8 @@ void Player::hitbox_P()
 	upbox_player.setPosition(this->sprite.getPosition().x+13.f, this->sprite.getPosition().y - 50.f);
 
 	downbox_player.setFillColor(sf::Color::Red);
-	downbox_player.setSize(sf::Vector2f(40.f, 50.f));
-	downbox_player.setPosition(this->sprite.getPosition().x + 13.f, this->sprite.getPosition().y + 60.f);
+	downbox_player.setSize(sf::Vector2f(40.f, 30.f));
+	downbox_player.setPosition(this->sprite.getPosition().x + 13.f, this->sprite.getPosition().y +80.f);
 
 	circ.setFillColor(sf::Color::Red);
 	circ.setRadius(2.f);
@@ -221,7 +221,7 @@ void Player::updateMovement()
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 	{
 		//sprite.move(0.f, -5.f);
-		if (delaydig >= 1.f)
+		if (delaydig >= 0.f)
 		{
 			this->digup = true;
 			time_dig.restart();
@@ -232,7 +232,7 @@ void Player::updateMovement()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 	{
 		//sprite.move(0.f, 5.f);
-		if (delaydig >=1.f)
+		if (delaydig >=0.f)
 		{
 			this->digdown = true;
 			time_dig.restart();
@@ -367,7 +367,7 @@ void Player::render(sf::RenderTarget& target)
 	
 	//target.draw(this->attackbox_player);
 	//target.draw(this->upbox_player);
-	target.draw(this->downbox_player);
+	//target.draw(this->downbox_player);
 	//target.draw(this->nextbox_player);
 	//target.draw(this->hitbox_player);
 	//target.draw(this->nextbox_player);

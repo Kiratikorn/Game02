@@ -20,14 +20,16 @@ void Game::initPlayer()
 {
 	this->player = new Player();
 	//this->orc_enemy = new Orc(20.f,20.f);
+	this->firebeam = new fireBeam();
 	this->fire_above = new Fire_above();
 	this->boss = new Boss();
 }
 
 void Game::initEnemy()
 {
-	this->spawnTimerMax=1000.f;
-	this->spawnTimer = this->spawnTimerMax;
+	
+	//this->spawnTimerMax=1000.f;
+	//this->spawnTimer = this->spawnTimerMax;
 }
 
 void Game::deleteblock()
@@ -71,6 +73,10 @@ Game::~Game()
 	{
 		delete i;
 	}
+	for (auto* i : this->fireballs)
+	{
+		delete i;
+	}
 	//for (auto* i : this->blocks)
 	//{
 	//	delete i;
@@ -82,11 +88,19 @@ void Game::initGUI()
 	this->font.loadFromFile("Font/CRIT RACE.ttf");
 
 	this->healthText.setFont(this->font);
-	this->healthText.setCharacterSize(40);
+	this->healthText.setCharacterSize(30);
 	this->healthText.setFillColor(sf::Color::White);
 
 	this->healthTex.loadFromFile("Pic/heart.png");
 	this->health_s.setTexture(this->healthTex);
+
+	this->scoreText.setFont(this->font);
+	this->scoreText.setCharacterSize(40);
+	this->scoreText.setFillColor(sf::Color::White);
+
+	this->bossHpBar.setSize(sf::Vector2f(500.f, 25.f));
+	this->bossHpBar.setFillColor(sf::Color::Red);
+
 }
 
 int Game::Block_ran()
@@ -202,12 +216,13 @@ void Game::showBlock()
 void Game::createBlock()
 {
 
-	if (this->player->getPosition().y+300.f>=this->y-200.f)
+	if (this->player->getPosition().y+600.f>=this->y)
 	{
 
 		for (row = 0; row < 5; row++)
 		{
 			Block_ran();
+
 			plat_left_hit = x;
 			plat_right_hit = x + 88;
 			plat_top_hit = y;
@@ -218,6 +233,16 @@ void Game::createBlock()
 					this->type = 0;
 				}
 			}
+			//if (y >= 5000.f && y<=5700.f)
+			//{
+			//	type = 11;
+			//}
+			//else if (y >= 5600.f)
+			//{
+			//	this->dirtBlocks.push_back(new Block_dirt(1000.f,6400.f));
+			//	type = 6;
+			//	
+			//}
 			if (this->type <= 5)
 			{
 				this->dirtBlocks.push_back(new Block_dirt(x, y));
@@ -225,32 +250,33 @@ void Game::createBlock()
 			else if (this->type == 6 || this->type == 7)
 			{
 				this->stoneBlocks.push_back(new Block_Stone(x, y));
-				this->stoneBlocks.push_back(new Block_Stone(x + 800.f, y + 1000.f));
+				this->stoneBlocks.push_back(new Block_Stone(x + 800.f, y + 500.f));
 				
 			}
 			else if (this->type == 8)
 			{
 				this->orc_enemies.push_back(new Orc(x,y));
-				this->orc_enemies.push_back(new Orc(x + 1000.f, y + 1000.f));
+				this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
 			}
 			else if (this->type == 9)
 			{
 				this->coins.push_back(new Point(x + 20.f, y + 30.f));
-				this->coins.push_back(new Point(x+600.f, y+1500.f));
+				this->coins.push_back(new Point(x+600.f, y+500.f));
 			}
-			else if(this->type == 10)
+			else if(this->type == 10 )
 			{
-				this->fires.push_back(new Fire(100.f, y+10.f));
-				this->firers.push_back(new firer(33.f, y));
-
-				this->fires.push_back(new Fire(-200.f, y+1000.f));
-				this->firers.push_back(new firer(x+600.f, y+1500.f));
-
+				if (firecheck % 3 != 1)
+				{
+					this->fires.push_back(new Fire(100.f, y + 10.f));
+					this->firers.push_back(new firer(33.f, y));
+				}	
+				firecheck++;
 			}
 			else
 			{
 
 			}
+
 			x += 88;
 		}
 		//if (x >= 452)
@@ -321,6 +347,7 @@ void Game::enemy_view()
 	//	this->orc_enemy->check_view = false;
 	//}
 }
+
 
 void Game::update_enemy()
 {
@@ -481,12 +508,12 @@ void Game::update_stoneBlock()
 				if (this->player->getPosition().x > this->stoneBlocks[i]->getPosition().x)
 				{
 					this->player->setPosition(this->stoneBlocks[i]->getPosition().x + 80.f, this->player->getPosition().y);
-					std::cout << this->player->getPosition().x<<" " << this->player->getPosition().y << "\n";
+					//std::cout << this->player->getPosition().x<<" " << this->player->getPosition().y << "\n";
 				}
 				else if (this->player->getPosition().x < this->stoneBlocks[i]->getPosition().x)
 				{
 					this->player->setPosition(this->stoneBlocks[i]->getPosition().x - this->player->hitbox_player.getGlobalBounds().width, this->player->getPosition().y);
-					std::cout << this->player->getPosition().x <<" "<< this->player->getPosition().y << "\n";
+					//std::cout << this->player->getPosition().x <<" "<< this->player->getPosition().y << "\n";
 				}
 			}
 		}
@@ -502,11 +529,20 @@ void Game::update_stoneBlock()
 
 void Game::update_firer()
 {
+
 	for (int i = 0; i < this->firers.size(); ++i)
 	{
-		if (this->player->getPosition().y - 400.f >= this->firers[i]->getPosition().y)
+
+		if (this->player->getPosition().y - 400.f >= this->firers[i]->getPosition().y )
 		{
-			this->firers.erase(this->firers.begin() + i);
+			this->firers[i]->setPosition(-100.f, this->player->getPosition().y + 700.f);
+			
+		}
+		if (this->player->getPosition().y - 800.f >= this->firers[i]->getPosition().y)
+		{
+			this->firers.erase(this->firers.begin()+i );
+
+
 		}
 	}
 }
@@ -521,24 +557,76 @@ void Game::update_fire()
 			this->fires.push_back(new Fire(100.f, this->fires[i]->getPosition().y));
 			this->fires.erase(fires.begin() + i);
 		}
-
 		if (this->player->getPosition().y - 400.f >= this->fires[i]->getPosition().y)
 		{
-			this->fires.erase(this->fires.begin() + i);
+			this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 500.f);
+
 		}
+		if (this->player->getPosition().y - 800.f >= this->fires[i]->getPosition().y)
+		{
+			this->fires.erase(this->fires.begin() + i);
+
+		}
+
+
 		fires[i]->update_fire();
 	}
 
 }
 
+void Game::update_fireball()
+{
+	for (int i = 0; i < this->fireballs.size(); ++i)
+	{
+		if (this->player->getGlobalBounds_hit().intersects(this->fireballs[i]->getGlobalBounds()))
+		{
+			this->health--;
+			this->fireballs[i]->setPosition(-100.f, this->player->getPosition().y - 200.f);
+		}
+		if (this->player->getPosition().y+ 500.f <= this->fireballs[i]->getPosition().y )
+		{
+			this->fireballs.erase(this->fireballs.begin() + i);
+
+		}
+		fireballs[i]->update_fireball();
+	}
+}
+
 void Game::updateGUI()
 {
 	std::stringstream healthNum;
-	                                                                 
-	healthNum << " x" << health;
+	std::stringstream scoreNum;
+
+	scoreNum << "Score :" << score;
+	healthNum << " x " << health;
 	this->healthText.setString(healthNum.str());
-	this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 480.f));
-	this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 480.f));
+	this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 470.f));
+	this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 470.f));
+
+	this->scoreText.setString(scoreNum.str());
+	this->scoreText.setPosition(sf::Vector2f(480.f, this->player->getPosition().y - 470.f));
+
+	this->bossHpBar.setSize(sf::Vector2f(500.f, this->bossHpBar.getSize().y));
+	this->bossHpBar.setPosition(sf::Vector2f(90.f, this->player->getPosition().y - 420.f));
+}
+
+void Game::boss_attack()
+{
+	spawnTimer += 20.f;
+	printf("%d\n", spawnTimer);
+	if (spawnTimer == 1000.f)
+	{
+		fireballX = rand() % 450 + 100.f;
+		this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 500.f));
+		spawnTimer = 0.f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+	{
+		this->firebeam->skill = rand() % 2;
+		this->firebeam->setPosition(450.f, this->player->getPosition().y - 100.f);
+	}
+	this->firebeam->update_firebeam();
+	
 }
 
 void Game::player_attack()
@@ -565,7 +653,7 @@ void Game::update_coin()
 		{
 			this->coins.erase(this->coins.begin()+i);
 			this->score+=5;
-			printf("%d\n", score);
+			//printf("%d\n", score);
 		}
 		if (this->player->digup == true)
 		{
@@ -573,7 +661,7 @@ void Game::update_coin()
 			{
 				this->coins.erase(this->coins.begin() + i);
 				this->score += 5;
-				printf("%d\n", score);
+				//printf("%d\n", score);
 			}
 		}
 		if (this->player->getPosition().y - 400.f >= this->coins[i]->getPosition().y)
@@ -650,11 +738,22 @@ void Game::updatePlayer()
 	this->boss->update_boss();
 	this->update_coin();
 	this->player->update();
-	std::cout << this->player->getPosition().x << " " << this->player->getPosition().y << "\n";
+	//std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
 }
 
 void Game::updateWorld()
 {
+	int WorldY;
+	//worldY += 900.f;
+	WorldY = this->player->getPosition().y;
+	this->worldBackground.setPosition(0.f, WorldY-400.f);
+	//if (WorldY%900 >= 800.f)
+	//{
+	//	
+	//	this->worldBackground.setPosition(0.f, WorldY);
+	//	printf("%f\n", worldY);
+
+	//}
 }
 
 //void Game::run()
@@ -697,7 +796,9 @@ void Game::update()
 
 	this->update_fire();
 	this->update_firer();
+	this->update_fireball();
 	
+	this->boss_attack();
 	this->player_attack();
 
 	//this->updateBlock();
@@ -714,7 +815,13 @@ void Game::update()
 void Game::renderGUI()
 {
 	this->window->draw(health_s);
+	this->window->draw(scoreText);
 	this->window->draw(healthText);
+	if (this->player->getPosition().y >= 5000.f)
+	{
+		this->window->draw(bossHpBar);
+	}
+	
 }
 
 void Game::renderPlayer()
@@ -737,7 +844,11 @@ void Game::renderPlayer()
 		{
 			firer->render(*this->window);
 		}
-
+		for (auto* fireball : this->fireballs)
+		{
+			fireball->render(*this->window);
+		}
+		this->firebeam->render(*this->window);
 	this->fire_above->render(*this->window);
 	this->boss->render_boss(*this->window);
 	this->player->render(*this->window);
@@ -746,6 +857,10 @@ void Game::renderPlayer()
 
 void Game::renderWorld()
 {
+	//for (auto* worldbackground : this->worldbackgrounds)
+	//{
+	//	worldbackground->render(*this->window);
+	//}
 	this->window->draw(this->worldBackground);
 }
 
@@ -767,8 +882,9 @@ void Game::render()
 	{
 		stoneblock->render(*this->window);
 	}
-	this->renderPlayer();
 	this->renderGUI();
+	this->renderPlayer();
+	
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));
 	this->view.setSize(650.f,950.f);
 	this->view.setCenter(650.f/2,this->player->getPosition().y);

@@ -24,6 +24,11 @@ firer::~firer()
 {
 }
 
+void firer::setPosition(const float x, const float y)
+{
+	this->firer_s.setPosition(x, y);
+}
+
 const sf::Vector2f firer::getPosition() const
 {
 	return this->firer_s.getPosition();

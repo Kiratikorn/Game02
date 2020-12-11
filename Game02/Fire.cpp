@@ -24,6 +24,13 @@ Fire::~Fire()
 {
 }
 
+void Fire::setPosition(const float x, const float y)
+{
+	this->fire_s.setPosition(x, y);
+	xplus = 0;
+
+}
+
 const sf::Vector2f Fire::getPosition() const
 {
 	return this->fire_s.getPosition();
@@ -36,16 +43,20 @@ const sf::FloatRect Fire::getGlobalBounds() const
 
 void Fire::updateMovement_fire()
 {
-	x += 4.f;
-	fire_s.setPosition(x, this->fire_s.getPosition().y);
-	if (x >= 550.f)
+	if (x == -200.f)
 	{
-		x = 100.f;
+		xplus = 0;
 	}
-	else if (x >= -50.f && x<=0.f)
+	if (xplus == 4)
 	{
-		x = -200.f;
+		x += xplus;
+		fire_s.setPosition(x, this->fire_s.getPosition().y);
+		if (x >= 550.f)
+		{
+			x = 100.f;
+		}
 	}
+	
 
 }
 

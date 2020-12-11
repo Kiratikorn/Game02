@@ -2,11 +2,15 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "Player.h"
+
+//fire
 #include "firer.h"
 #include "Fire.h"
-//#include "Platform.h"
-#include "Orc.h"
+#include "Fireball.h"
 #include "fire_above.h"
+#include "fireBeam.h"
+//
+#include "Orc.h"
 #include "Boss.h"
 #include "Point.h"
 //#include "Block.h"
@@ -26,6 +30,11 @@ private:
 	int x = 100, y = 500;
 	int column, row = 0,spawn;
 	int health=3;
+	int score=0;
+	int firecheck=0;
+	float worldY=0;
+	int fireballX;
+	
 	sf::RenderWindow* window;
 	sf::Event ev;
 	sf::View view;
@@ -40,9 +49,11 @@ private:
 	sf::Sprite worldBackground;
 	sf::RectangleShape blockCheck;
 	sf::RectangleShape check;
+	sf::RectangleShape bossHpBar;
 	
 	sf::Font font;
 	sf::Text healthText;
+	sf::Text scoreText;
 
 	Player* player;
 	//Orc* orc_enemy;
@@ -52,8 +63,10 @@ private:
 	std::vector<Block_Stone*> stoneBlocks;
 	std::vector<firer*> firers;
 	std::vector<Fire*> fires;
+	std::vector<Fireball*> fireballs;
 	//std::vector<Block*> blocks;
 	//std::vector<Orc*> orc_enemy;
+	fireBeam* firebeam;
 	Fire_above* fire_above;
 	Boss* boss;
 	bool ran = false;
@@ -66,10 +79,10 @@ private:
 	void deleteblock();
 	int BlockX = 100, BlockY = 500;
 
-	float spawnTimer;
+	float spawnTimer=0;
 	float spawnTimerMax;
 
-	int score=0;
+	
 public:
 	Game();
 	virtual ~Game();
@@ -89,8 +102,10 @@ public:
 	void update_stoneBlock();
 	void update_firer();
 	void update_fire();
+	void update_fireball();
 	void updateGUI();
-
+	
+	void boss_attack();
 	void player_attack();
 
 	void update_coin();
