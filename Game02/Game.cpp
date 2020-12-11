@@ -13,12 +13,17 @@ void Game::initWorld()
 	{
 		printf("BG ERROR");
 	}
+	this->op_BackgroundTex.loadFromFile("Pic/Menu.png");
+
 	this->worldBackground.setTexture(this->worldBackgroundTex);
+	this->op_Background.setTexture(this->op_BackgroundTex);
+
 }
 
 void Game::initPlayer()
 {
 	this->player = new Player();
+	this->player->setPosition(280.f, 400.f);
 	//this->orc_enemy = new Orc(20.f,20.f);
 	//this->firebeam = new fireBeam(450.f, this->player->getPosition().y - 200.f);
 	this->fire_above = new Fire_above();
@@ -237,6 +242,25 @@ void Game::createBlock()
 					this->type = 0;
 				}
 			}
+			if (y <=500 ) //opening
+			{
+
+				if (x == 100 || x == 452) 
+				{
+					type = 6;
+				}
+				else
+				{
+					type = 0;
+				}
+			}
+			else if (y <= 800 && y>=500)
+			{
+				if (type > 8)
+				{
+					type = 0;
+				}
+			}
 			//if (y >= 5000.f && y<=5700.f)
 			//{
 			//	type = 11;
@@ -259,13 +283,14 @@ void Game::createBlock()
 			}
 			else if (this->type == 8)
 			{
-				this->orc_enemies.push_back(new Orc(x,y));
-				this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
+				this->coins.push_back(new Point(x + 20.f, y + 30.f));
+				this->coins.push_back(new Point(x + 600.f, y + 500.f));
+
 			}
 			else if (this->type == 9)
 			{
-				this->coins.push_back(new Point(x + 20.f, y + 30.f));
-				this->coins.push_back(new Point(x+600.f, y+500.f));
+				this->orc_enemies.push_back(new Orc(x, y));
+				this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
 			}
 			else if(this->type == 10 )
 			{
@@ -364,29 +389,34 @@ void Game::update_enemy()
 
 	for (int i = 0; i < this->orc_enemies.size(); ++i)
 	{
+		if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_orc()))
+		{
+			orc_enemies[i]->check_move = 3;
 
-			if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_hit_orc()))
+			health--;
+		}
+		else if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_hit_orc()))
+		{
+			if (this->player->getPosition().x > this->orc_enemies[i]->getPosition().x)
 			{
-				if (this->player->getPosition().x > this->orc_enemies[i]->getPosition().x)
-				{
-					orc_enemies[i]->check_move = 2;
-				}
-				else if (this->player->getPosition().x < this->orc_enemies[i]->getPosition().x)
-				{
-					orc_enemies[i]->check_move = 1;
-				}
-				orc_enemies[i]->check_view = true;
+				orc_enemies[i]->check_move = 2;
 			}
-			else
+			else if (this->player->getPosition().x < this->orc_enemies[i]->getPosition().x)
 			{
-				orc_enemies[i]->check_view = false;
+				orc_enemies[i]->check_move = 1;
 			}
-			if (this->player->getPosition().y - 400.f >= this->orc_enemies[i]->getPosition().y)
-			{
-				this->orc_enemies.erase(this->orc_enemies.begin() + i);
-				//std::cout << this->player->getPosition().y << " : " << this->orc_enemies[i]->getPosition().y<<"\n";
-			}
-			orc_enemies[i]->update_orc();
+			orc_enemies[i]->check_view = true;
+		}
+		else
+		{
+			orc_enemies[i]->check_view = false;
+		}
+		if (this->player->getPosition().y - 400.f >= this->orc_enemies[i]->getPosition().y)
+		{
+			this->orc_enemies.erase(this->orc_enemies.begin() + i);
+			//std::cout << this->player->getPosition().y << " : " << this->orc_enemies[i]->getPosition().y<<"\n";
+		}
+		orc_enemies[i]->update_orc();
 	}
 }
 
@@ -792,7 +822,13 @@ void Game::updateWorld()
 	int WorldY;
 	//worldY += 900.f;
 	WorldY = this->player->getPosition().y;
-	this->worldBackground.setPosition(0.f, WorldY-400.f);
+	if (this->player->getPosition().y >= 450)
+	{
+		this->worldBackground.setPosition(0.f, WorldY - 400.f);
+	}
+
+	this->op_Background.setPosition(-73.f, 60.f);
+	this->op_Background.setScale(1.45f, 1.45f);
 	//if (WorldY%900 >= 800.f)
 	//{
 	//	
@@ -912,6 +948,7 @@ void Game::renderWorld()
 	//	worldbackground->render(*this->window);
 	//}
 	this->window->draw(this->worldBackground);
+
 }
 
 void Game::render()
@@ -932,11 +969,13 @@ void Game::render()
 	{
 		stoneblock->render(*this->window);
 	}
+	this->window->draw(this->op_Background);
 	this->renderGUI();
 	this->renderPlayer();
 	
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));
 	this->view.setSize(650.f,950.f);
+
 	this->view.setCenter(650.f/2,this->player->getPosition().y);
 	this->window->setView(view);
 

@@ -44,6 +44,8 @@ private:
 	sf::Texture two;
 	sf::Texture healthTex;
 	sf::Texture worldBackgroundTex;
+	sf::Texture op_BackgroundTex;
+	sf::Sprite op_Background;
 	sf::Sprite blockOne;
 	sf::Sprite blockTwo;
 	sf::Sprite health_s;
@@ -79,7 +81,7 @@ private:
 	void initPlayer();
 	void initEnemy();
 	void deleteblock();
-	int BlockX = 100, BlockY = 500;
+	int BlockX = 100, BlockY = 400;
 
 	float spawnTimer=0;
 	float spawnTimerMax;

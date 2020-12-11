@@ -180,7 +180,12 @@ void Orc::updatePhysics_orc()
 void Orc::updateMovement_orc()
 {
 	this->animState= orc_ANIMATION_STATES::IDLE_orc;
-	if (this->check_view==true)
+
+	if (this->check_move == 3)
+	{
+		this->animState = orc_ANIMATION_STATES::ATTACK_orc;
+	}
+	else if (this->check_view==true)
 	{
 		if (this->check_move == 1)
 		{
@@ -192,8 +197,8 @@ void Orc::updateMovement_orc()
 			orc.move(1.5f, 0.f);
 			this->animState = orc_ANIMATION_STATES::MOVING_RIGHT_orc;
 		}
-		
 	}
+
 	else
 	{
 		orc.move(0.0f, 0.f);
@@ -246,18 +251,18 @@ void Orc::updateAnimations_orc()
 		this->orc.setOrigin(this->orc.getGlobalBounds().width / 3.f, 0.f);
 
 	}
-	//else if (this->animState == PLAYER_ANIMATION_STATES::MOVING_UP_orc)
-	//{
-	//	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f)
-	//	{
-	//		this->currentFrame.top = 700.f;
-	//		this->currentFrame.left += 150.f;
-	//		if (this->currentFrame.left >= 300.f)
-	//			this->currentFrame.left = 0;
-	//		this->animationTimer.restart();
-	//		this->sprite.setTextureRect(this->currentFrame);
-	//	}
-	//}
+	else if (this->animState == orc_ANIMATION_STATES::ATTACK_orc)
+	{
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.3f)
+		{
+			this->currentFrame.top = 180.f;
+			this->currentFrame.left += 60.f;
+			if (this->currentFrame.left >= 120.f)
+				this->currentFrame.left = 0;
+				this->animationTimer.restart();
+			this->orc.setTextureRect(this->currentFrame);
+		}
+	}
 	//else if (this->animState == PLAYER_ANIMATION_STATES::ATTACK_orc)
 	//{
 	//	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.2f)

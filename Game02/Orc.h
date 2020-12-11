@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include"Player.h"
-enum orc_ANIMATION_STATES { IDLE_orc = 0, MOVING_LEFT_orc, MOVING_RIGHT_orc};
+enum orc_ANIMATION_STATES { IDLE_orc = 0, MOVING_LEFT_orc, MOVING_RIGHT_orc,ATTACK_orc};
 class Orc
 {
 private:
