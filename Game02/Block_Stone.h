@@ -4,7 +4,7 @@ class Block_Stone
 {
 	sf::Sprite stone;
 	sf::Texture stoneTex;
-
+	//sf::RectangleShape stoneShape;
 	void initTexture();
 	void createBlock_stone();
 public:

@@ -57,6 +57,7 @@ public :
 
 	float gravity_player;
 
+	void setPos(float x,float y);
 	//Accessors
 	const bool& getAnimSwitch();
 	const sf::Vector2f getPosition() const;

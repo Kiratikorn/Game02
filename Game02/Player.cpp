@@ -67,6 +67,8 @@ void Player::hitbox_P()
 	nextbox_player.setFillColor(sf::Color::Black);
 	nextbox_player.setSize(sf::Vector2f(20.f, 40.f));
 	nextbox_player.setPosition(this->sprite.getPosition().x + 50.f, this->sprite.getPosition().y + 25.f);
+	nextbox_player.setOutlineColor(sf::Color::Transparent);
+	nextbox_player.setOutlineThickness(1.f);
 
 	upbox_player.setFillColor(sf::Color::Blue);
 	upbox_player.setSize(sf::Vector2f(40.f, 70.f));
@@ -75,11 +77,18 @@ void Player::hitbox_P()
 	downbox_player.setFillColor(sf::Color::Red);
 	downbox_player.setSize(sf::Vector2f(40.f, 30.f));
 	downbox_player.setPosition(this->sprite.getPosition().x + 13.f, this->sprite.getPosition().y +80.f);
+	downbox_player.setOutlineColor(sf::Color::Transparent);
+	downbox_player.setOutlineThickness(1.f);
 
 	circ.setFillColor(sf::Color::Red);
 	circ.setRadius(2.f);
 	circ.setPosition(this->sprite.getPosition().x , this->sprite.getPosition().y+ 80.f);
 
+}
+
+void Player::setPos(float x, float y)
+{
+	this->hitbox_player.setPosition(x, y);
 }
 
 const bool& Player::getAnimSwitch()
@@ -367,10 +376,10 @@ void Player::render(sf::RenderTarget& target)
 	
 	//target.draw(this->attackbox_player);
 	//target.draw(this->upbox_player);
-	//target.draw(this->downbox_player);
+	target.draw(this->downbox_player);
 	//target.draw(this->nextbox_player);
-	//target.draw(this->hitbox_player);
-	//target.draw(this->nextbox_player);
+	target.draw(this->hitbox_player);
+	target.draw(this->nextbox_player);
 	target.draw(this->sprite);
 
 

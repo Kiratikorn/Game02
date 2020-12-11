@@ -10,13 +10,12 @@ class fireBeam
 	sf::Texture firebeamTex;
 	sf::IntRect currentFrame;
 	sf::Clock animationTimer;
-
 	void initTexture();
 	void initSprite();
 public:
 	int skill;
 
-	fireBeam();
+	fireBeam(float pos_x, float pos_y);
 	virtual ~fireBeam();
 	void setPosition(const float x, const float y);
 	const sf::Vector2f getPosition1() const;

@@ -20,7 +20,7 @@ void Game::initPlayer()
 {
 	this->player = new Player();
 	//this->orc_enemy = new Orc(20.f,20.f);
-	this->firebeam = new fireBeam();
+	//this->firebeam = new fireBeam(450.f, this->player->getPosition().y - 200.f);
 	this->fire_above = new Fire_above();
 	this->boss = new Boss();
 }
@@ -74,6 +74,10 @@ Game::~Game()
 		delete i;
 	}
 	for (auto* i : this->fireballs)
+	{
+		delete i;
+	}
+	for (auto* i : this->firebeams)
 	{
 		delete i;
 	}
@@ -438,23 +442,38 @@ void Game::update_dirtBlock()
 	for (int i = 0; i < this->dirtBlocks.size(); ++i)
 	{
  
-		if (this->player->getGlobalBounds_hit().intersects(this->dirtBlocks[i]->getGlobalBounds()))
+		if (this->player->getGlobalBounds_down().intersects(this->dirtBlocks[i]->getGlobalBounds()))
 		{
 			this->player->setPosition(this->player->getPosition().x, this->dirtBlocks[i]->getPosition().y - 88.f);
 		}
 		if (this->player->getGlobalBounds_next().intersects(this->dirtBlocks[i]->getGlobalBounds()))
 		{
-			if (this->player->getGlobalBounds_hit().intersects(this->dirtBlocks[i]->getGlobalBounds()))
-			{
-				if (this->player->getPosition().x > this->dirtBlocks[i]->getPosition().x)
-				{
-					this->player->setPosition(this->dirtBlocks[i]->getPosition().x + 80.f, this->player->getPosition().y);
-				}
-				else if (this->player->getPosition().x < this->dirtBlocks[i]->getPosition().x)
-				{
-					this->player->setPosition(this->dirtBlocks[i]->getPosition().x - this->player->hitbox_player.getGlobalBounds().width, this->player->getPosition().y);
-				}
+			//if (this->player->getGlobalBounds_hit().intersects(this->dirtBlocks[i]->getGlobalBounds()))
+			//{
+			if (this->player->getGlobalBounds_hit().left < this->dirtBlocks[i]->getGlobalBounds().left
+				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width < this->dirtBlocks[i]->getGlobalBounds().left + this->dirtBlocks[i]->getGlobalBounds().width
+				&& this->player->getGlobalBounds_hit().top<this->dirtBlocks[i]->getGlobalBounds().top + this->dirtBlocks[i]->getGlobalBounds().height
+				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->dirtBlocks[i]->getGlobalBounds().top
+				) {
+				this->player->setPosition(this->dirtBlocks[i]->getGlobalBounds().left - this->player->getGlobalBounds_hit().width, this->player->getGlobalBounds_hit().top);
 			}
+			if (this->player->getGlobalBounds_hit().left > this->dirtBlocks[i]->getGlobalBounds().left
+				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width > this->dirtBlocks[i]->getGlobalBounds().left + this->dirtBlocks[i]->getGlobalBounds().width
+				&& this->player->getGlobalBounds_hit().top<this->dirtBlocks[i]->getGlobalBounds().top + this->dirtBlocks[i]->getGlobalBounds().height
+				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->dirtBlocks[i]->getGlobalBounds().top
+				) {
+				this->player->setPosition(this->dirtBlocks[i]->getGlobalBounds().left+ this->dirtBlocks[i]->getGlobalBounds().width, this->player->getGlobalBounds_hit().top);
+				
+			}
+				//if (this->player->getPosition().x > this->dirtBlocks[i]->getPosition().x)
+				//{
+				//	this->player->setPosition(this->dirtBlocks[i]->getPosition().x + 80.f, this->player->getPosition().y);
+				//}
+				//else if (this->player->getPosition().x < this->dirtBlocks[i]->getPosition().x)
+				//{
+				//	this->player->setPosition(this->dirtBlocks[i]->getPosition().x - this->player->hitbox_player.getGlobalBounds().width, this->player->getPosition().y);
+				//}
+			//}
 		}
 		if (this->player->getPosition().y - 400.f >= this->dirtBlocks[i]->getPosition().y)
 		{
@@ -497,25 +516,40 @@ void Game::update_stoneBlock()
 {
 	for (int i = 0; i < this->stoneBlocks.size(); ++i)
 	{
-		if (this->player->getGlobalBounds_hit().intersects(this->stoneBlocks[i]->getGlobalBounds()))
+		if (this->player->getGlobalBounds_down().intersects(this->stoneBlocks[i]->getGlobalBounds()))
 		{
 			this->player->setPosition(this->player->getPosition().x, this->stoneBlocks[i]->getPosition().y - 88.f);
 		}
 		if (this->player->getGlobalBounds_next().intersects(this->stoneBlocks[i]->getGlobalBounds()))
 		{
-			if (this->player->getGlobalBounds_hit().intersects(this->stoneBlocks[i]->getGlobalBounds()))
-			{
-				if (this->player->getPosition().x > this->stoneBlocks[i]->getPosition().x)
-				{
-					this->player->setPosition(this->stoneBlocks[i]->getPosition().x + 80.f, this->player->getPosition().y);
-					//std::cout << this->player->getPosition().x<<" " << this->player->getPosition().y << "\n";
-				}
-				else if (this->player->getPosition().x < this->stoneBlocks[i]->getPosition().x)
-				{
-					this->player->setPosition(this->stoneBlocks[i]->getPosition().x - this->player->hitbox_player.getGlobalBounds().width, this->player->getPosition().y);
-					//std::cout << this->player->getPosition().x <<" "<< this->player->getPosition().y << "\n";
-				}
+			if (this->player->getGlobalBounds_hit().left < this->stoneBlocks[i]->getGlobalBounds().left
+				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width < this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width
+				&& this->player->getGlobalBounds_hit().top<this->stoneBlocks[i]->getGlobalBounds().top + this->stoneBlocks[i]->getGlobalBounds().height
+				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->stoneBlocks[i]->getGlobalBounds().top
+				) {
+				this->player->setPosition(this->stoneBlocks[i]->getGlobalBounds().left - this->player->getGlobalBounds_hit().width, this->player->getGlobalBounds_hit().top);
 			}
+			if (this->player->getGlobalBounds_hit().left > this->stoneBlocks[i]->getGlobalBounds().left
+				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width > this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width
+				&& this->player->getGlobalBounds_hit().top<this->stoneBlocks[i]->getGlobalBounds().top + this->stoneBlocks[i]->getGlobalBounds().height
+				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->stoneBlocks[i]->getGlobalBounds().top
+				) {
+				this->player->setPosition(this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width, this->player->getGlobalBounds_hit().top);
+
+			}
+			//if (this->player->getGlobalBounds_hit().intersects(this->stoneBlocks[i]->getGlobalBounds()))
+			//{
+			//	if (this->player->getPosition().x > this->stoneBlocks[i]->getPosition().x)
+			//	{
+			//		this->player->setPosition(this->stoneBlocks[i]->getPosition().x + 80.f, this->player->getPosition().y);
+			//		//std::cout << this->player->getPosition().x<<" " << this->player->getPosition().y << "\n";
+			//	}
+			//	else if (this->player->getPosition().x < this->stoneBlocks[i]->getPosition().x)
+			//	{
+			//		this->player->setPosition(this->stoneBlocks[i]->getPosition().x - this->player->hitbox_player.getGlobalBounds().width, this->player->getPosition().y);
+			//		//std::cout << this->player->getPosition().x <<" "<< this->player->getPosition().y << "\n";
+			//	}
+			//}
 		}
 
 		if (this->player->getPosition().y - 400.f >= this->stoneBlocks[i]->getPosition().y)
@@ -592,6 +626,15 @@ void Game::update_fireball()
 	}
 }
 
+void Game::update_firebeam()
+{
+	for (int i = 0; i < this->firebeams.size(); ++i)
+	{
+		this->firebeams[i]->skill = rand() % 2;
+		this->firebeams[i]->update_firebeam();
+	}
+}
+
 void Game::updateGUI()
 {
 	std::stringstream healthNum;
@@ -613,19 +656,22 @@ void Game::updateGUI()
 void Game::boss_attack()
 {
 	spawnTimer += 20.f;
-	printf("%d\n", spawnTimer);
-	if (spawnTimer == 1000.f)
+	if (spawnTimer == 2000.f)
 	{
+
 		fireballX = rand() % 450 + 100.f;
 		this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 500.f));
+		this->firebeams.push_back(new fireBeam(500.f, this->player->getPosition().y - 400.f));
 		spawnTimer = 0.f;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
 	{
-		this->firebeam->skill = rand() % 2;
-		this->firebeam->setPosition(450.f, this->player->getPosition().y - 100.f);
+		bossskill = true;
 	}
-	this->firebeam->update_firebeam();
+	if (bossskill == true)
+	{
+
+	}
 	
 }
 
@@ -797,6 +843,7 @@ void Game::update()
 	this->update_fire();
 	this->update_firer();
 	this->update_fireball();
+	this->update_firebeam();
 	
 	this->boss_attack();
 	this->player_attack();
@@ -848,7 +895,10 @@ void Game::renderPlayer()
 		{
 			fireball->render(*this->window);
 		}
-		this->firebeam->render(*this->window);
+		for (auto* firebeam : this->firebeams)
+		{
+			firebeam->render(*this->window);
+		}
 	this->fire_above->render(*this->window);
 	this->boss->render_boss(*this->window);
 	this->player->render(*this->window);

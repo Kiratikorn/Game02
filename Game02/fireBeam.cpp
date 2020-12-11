@@ -8,20 +8,23 @@ void fireBeam::initTexture()
 void fireBeam::initSprite()
 {
 	this->firebeam_s1.setTexture(this->firebeamTex);
-	this->currentFrame = sf::IntRect(0, 0, 65, 300);
+	this->currentFrame = sf::IntRect(0, 0, 63, 300);
 	this->firebeam_s1.setTextureRect(this->currentFrame);
-	this->firebeam_s1.setScale(1.f, 1.f);
+	this->firebeam_s1.setScale(2.f, 2.f);
 
 	this->firebeam_s2.setTexture(this->firebeamTex);
 	this->firebeam_s2.setTextureRect(this->currentFrame);
-	this->firebeam_s2.setScale(1.f, 1.f);
+	this->firebeam_s2.setScale(2.f, 2.f);
 }
 
-fireBeam::fireBeam()
+fireBeam::fireBeam(float pos_x, float pos_y)
 {
 	this->initTexture();
 	this->initSprite();
-
+	this->firebeam_s1.setPosition(pos_x, pos_y);
+	this->firebeam_s2.setPosition(pos_x, pos_y);
+	this->x1 = pos_x;
+	this->x2 = pos_x-420.f;
 }
 
 fireBeam::~fireBeam()
@@ -31,7 +34,7 @@ fireBeam::~fireBeam()
 void fireBeam::setPosition(const float x, const float y)
 {
 	this->firebeam_s1.setPosition(x, y);
-	this->firebeam_s2.setPosition(x-350.f, y);
+	this->firebeam_s2.setPosition(x, y);
 }
 
 const sf::Vector2f fireBeam::getPosition1() const
@@ -60,15 +63,17 @@ const sf::FloatRect fireBeam::getGlobalBounds2() const
 
 void fireBeam::updateAnimations_firebeam()
 {
-	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.2f)
+	if (this->animationTimer.getElapsedTime().asSeconds() >= 0.4f)
 	{
 		this->currentFrame.top = 0.f;
-		this->currentFrame.left += 63.f;
-		if (this->currentFrame.left > 300.f)
-			this->currentFrame.left = 240;
-		this->animationTimer.restart();
 		this->firebeam_s1.setTextureRect(this->currentFrame);
 		this->firebeam_s2.setTextureRect(this->currentFrame);
+		this->currentFrame.left += 61.f;
+		if (this->currentFrame.left > 305.f)
+			this->currentFrame.left = 244;
+		
+
+		this->animationTimer.restart();
 	}
 }
 
@@ -77,13 +82,16 @@ void fireBeam::updateMovement_firebeam()
 
 	if (this->skill == 0)
 	{
-		this->firebeam_s1.move(-1.f, 0.f);
+		this->x1 -= 2.f;
+		this->firebeam_s1.setPosition(x1, this->firebeam_s1.getPosition().y);
 
 	}
 	if (this->skill == 1)
 	{
-		this->firebeam_s1.move(-1.f, 0.f);
-		this->firebeam_s2.move(1.f, 0.f);
+		this->x1 -= 0.1f;
+		this->x2 += 0.1f;
+		this->firebeam_s1.setPosition(x1, this->firebeam_s1.getPosition().y);
+		this->firebeam_s2.setPosition(x2, this->firebeam_s1.getPosition().y);
 
 	}
 	
@@ -101,19 +109,13 @@ void fireBeam::render(sf::RenderTarget& target)
 	{
 		target.draw(this->firebeam_s1);
 	}
-	else
-	{
-		this->currentFrame.left = 0.f;
-	}
 
-	if (this->skill == 0 && this->firebeam_s1.getPosition().x >= 300.f)
+
+	if (this->skill == 1 && this->firebeam_s1.getPosition().x >= 300.f)
 	{
 		target.draw(this->firebeam_s1);
 		target.draw(this->firebeam_s2);
 	}
-	else
-	{
-		this->currentFrame.left = 0.f;
-	}
+
 
 }

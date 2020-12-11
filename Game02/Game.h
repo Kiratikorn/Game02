@@ -34,7 +34,8 @@ private:
 	int firecheck=0;
 	float worldY=0;
 	int fireballX;
-	
+	bool bossskill=false;
+
 	sf::RenderWindow* window;
 	sf::Event ev;
 	sf::View view;
@@ -64,9 +65,10 @@ private:
 	std::vector<firer*> firers;
 	std::vector<Fire*> fires;
 	std::vector<Fireball*> fireballs;
+	std::vector<fireBeam*> firebeams;
 	//std::vector<Block*> blocks;
 	//std::vector<Orc*> orc_enemy;
-	fireBeam* firebeam;
+	//fireBeam* firebeam;
 	Fire_above* fire_above;
 	Boss* boss;
 	bool ran = false;
@@ -103,6 +105,7 @@ public:
 	void update_firer();
 	void update_fire();
 	void update_fireball();
+	void update_firebeam();
 	void updateGUI();
 	
 	void boss_attack();
