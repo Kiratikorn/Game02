@@ -455,14 +455,14 @@ void Game::update_dirtBlock()
 				&& this->player->getGlobalBounds_hit().top<this->dirtBlocks[i]->getGlobalBounds().top + this->dirtBlocks[i]->getGlobalBounds().height
 				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->dirtBlocks[i]->getGlobalBounds().top
 				) {
-				this->player->setPosition(this->dirtBlocks[i]->getGlobalBounds().left - this->player->getGlobalBounds_hit().width, this->player->getGlobalBounds_hit().top);
+				this->player->setPosition(this->dirtBlocks[i]->getGlobalBounds().left - this->player->getGlobalBounds_hit().width-20.f, this->player->getPosition().y);
 			}
 			if (this->player->getGlobalBounds_hit().left > this->dirtBlocks[i]->getGlobalBounds().left
 				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width > this->dirtBlocks[i]->getGlobalBounds().left + this->dirtBlocks[i]->getGlobalBounds().width
 				&& this->player->getGlobalBounds_hit().top<this->dirtBlocks[i]->getGlobalBounds().top + this->dirtBlocks[i]->getGlobalBounds().height
 				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->dirtBlocks[i]->getGlobalBounds().top
 				) {
-				this->player->setPosition(this->dirtBlocks[i]->getGlobalBounds().left+ this->dirtBlocks[i]->getGlobalBounds().width, this->player->getGlobalBounds_hit().top);
+				this->player->setPosition(this->dirtBlocks[i]->getGlobalBounds().left+ this->dirtBlocks[i]->getGlobalBounds().width+5.f, this->player->getPosition().y);
 				
 			}
 				//if (this->player->getPosition().x > this->dirtBlocks[i]->getPosition().x)
@@ -520,21 +520,22 @@ void Game::update_stoneBlock()
 		{
 			this->player->setPosition(this->player->getPosition().x, this->stoneBlocks[i]->getPosition().y - 88.f);
 		}
-		if (this->player->getGlobalBounds_next().intersects(this->stoneBlocks[i]->getGlobalBounds()))
+
+		if (this->player->getGlobalBounds_next().intersects(this->stoneBlocks[i]->getGlobalBounds()) && this->player->getGlobalBounds_hit().intersects(this->stoneBlocks[i]->getGlobalBounds()))
 		{
 			if (this->player->getGlobalBounds_hit().left < this->stoneBlocks[i]->getGlobalBounds().left
 				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width < this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width
 				&& this->player->getGlobalBounds_hit().top<this->stoneBlocks[i]->getGlobalBounds().top + this->stoneBlocks[i]->getGlobalBounds().height
 				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->stoneBlocks[i]->getGlobalBounds().top
 				) {
-				this->player->setPosition(this->stoneBlocks[i]->getGlobalBounds().left - this->player->getGlobalBounds_hit().width, this->player->getGlobalBounds_hit().top);
+				this->player->setPosition(this->stoneBlocks[i]->getGlobalBounds().left - this->player->getGlobalBounds_hit().width-20.f, this->player->getGlobalBounds_hit().top-41.f);
 			}
 			if (this->player->getGlobalBounds_hit().left > this->stoneBlocks[i]->getGlobalBounds().left
 				&& this->player->getGlobalBounds_hit().left + this->player->getGlobalBounds_hit().width > this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width
 				&& this->player->getGlobalBounds_hit().top<this->stoneBlocks[i]->getGlobalBounds().top + this->stoneBlocks[i]->getGlobalBounds().height
 				&& this->player->getGlobalBounds_hit().top + this->player->getGlobalBounds_hit().height>this->stoneBlocks[i]->getGlobalBounds().top
 				) {
-				this->player->setPosition(this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width, this->player->getGlobalBounds_hit().top);
+				this->player->setPosition(this->stoneBlocks[i]->getGlobalBounds().left + this->stoneBlocks[i]->getGlobalBounds().width, this->player->getGlobalBounds_hit().top - 41.f);
 
 			}
 			//if (this->player->getGlobalBounds_hit().intersects(this->stoneBlocks[i]->getGlobalBounds()))
@@ -551,7 +552,6 @@ void Game::update_stoneBlock()
 			//	}
 			//}
 		}
-
 		if (this->player->getPosition().y - 400.f >= this->stoneBlocks[i]->getPosition().y)
 		{
 			this->stoneBlocks.erase(this->stoneBlocks.begin() + i);

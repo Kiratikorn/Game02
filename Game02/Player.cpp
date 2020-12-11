@@ -241,12 +241,13 @@ void Player::updateMovement()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 	{
 		//sprite.move(0.f, 5.f);
-		if (delaydig >=0.f)
+		if (delaydig >=1.f)
 		{
+			this->animState = PLAYER_ANIMATION_STATES::DIG;
 			this->digdown = true;
+			
 			time_dig.restart();
 		}
-		this->animState = PLAYER_ANIMATION_STATES::DIG;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 	{
@@ -337,7 +338,7 @@ void Player::updateAnimations()
 	}
 	else if (this->animState == PLAYER_ANIMATION_STATES::DIG)
 	{
-		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.25f)
+		if (this->animationTimer.getElapsedTime().asSeconds() >= 0.1f)
 		{
 			this->currentFrame.top = 890.f;
 			this->currentFrame.left += 150.f;
