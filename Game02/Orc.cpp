@@ -14,6 +14,11 @@ Orc::~Orc()
 {
 }
 
+void Orc::setPosition(const float x, const float y)
+{
+	this->orc.setPosition(x, y);
+}
+
 //void Orc::spawn_Orc()
 //{
 //

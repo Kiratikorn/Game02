@@ -3,7 +3,7 @@
 class Fire
 {
 private:
-	int x , xplus=4 ;
+	int fireX, xplus=4 ;
 	sf::Sprite fire_s;
 	sf::Texture fireballTex;
 	void initTexture();

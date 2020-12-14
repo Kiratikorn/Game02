@@ -38,6 +38,11 @@ const sf::FloatRect Block_Stone::getGlobalBounds() const
 	return this->stoneShape.getGlobalBounds();
 }
 
+void Block_Stone::setPosition(const float x, const float y)
+{
+	this->stone.setPosition(x, y);
+}
+
 void Block_Stone::update()
 {
 	this->createBlock_stone();

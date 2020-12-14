@@ -99,6 +99,8 @@ void Game::initGUI()
 	this->healthText.setFont(this->font);
 	this->healthText.setCharacterSize(30);
 	this->healthText.setFillColor(sf::Color::White);
+	this->healthText.setOutlineColor(sf::Color::Black);
+	this->healthText.setOutlineThickness(2.f);
 
 	this->healthTex.loadFromFile("Pic/heart.png");
 	this->health_s.setTexture(this->healthTex);
@@ -106,6 +108,8 @@ void Game::initGUI()
 	this->scoreText.setFont(this->font);
 	this->scoreText.setCharacterSize(40);
 	this->scoreText.setFillColor(sf::Color::White);
+	this->scoreText.setOutlineColor(sf::Color::Black);
+	this->scoreText.setOutlineThickness(2.f);
 
 	this->bossHpBar.setSize(sf::Vector2f(500.f, 25.f));
 	this->bossHpBar.setFillColor(sf::Color::Red);
@@ -227,7 +231,7 @@ void Game::createBlock()
 
 	if (this->player->getPosition().y+600.f>=this->y)
 	{
-
+		this->difficulty = this->timedifficulty.getElapsedTime().asSeconds();
 		for (row = 0; row < 5; row++)
 		{
 			Block_ran();
@@ -242,7 +246,8 @@ void Game::createBlock()
 					this->type = 0;
 				}
 			}
-			if (y <=500 ) //opening
+			change_level = false;
+			if (y <=500 && level == 1) //opening
 			{
 
 				if (x == 100 || x == 452) 
@@ -254,14 +259,122 @@ void Game::createBlock()
 					type = 0;
 				}
 			}
-			else if (y <= 800 && y>=500)
+			else if (y <= 800 && y>=500 && level == 1)
 			{
 				if (type > 8)
 				{
 					type = 0;
 				}
 			}
-			//if (y >= 5000.f && y<=5700.f)
+
+			if (level == 1 && y >= 6500)
+			{
+				type = 14;
+				
+				if (y > 7000)
+				{
+					change_level = true;
+					level = 2;
+					x = 100; 
+					y = 212;
+					this->player->setPosition(this->player->getPosition().x, 0.f);
+				}
+			}
+			if (level == 2 && y >= 7700)
+			{
+				type = 14;
+				
+				if (y > 8500)
+				{
+					change_level = true;
+					level = 3;
+					x = 100;
+					y = 212;
+					this->player->setPosition(this->player->getPosition().x, 0.f);
+				}
+			}
+			if (level == 3 && y >= 8700)
+			{
+				type = 14;
+			
+				if (y > 9500)
+				{
+					change_level = true;
+					level = 4;
+					x = 100;
+					y = 950;
+					this->player->setPosition(this->player->getPosition().x, 0.f);
+				}
+			}
+
+			if (level == 2 && y<=900)
+			{
+				if (x >= 188 && x <= 364 && y == 300)
+				{
+					type = 0;
+				}
+				else if (x == 364 && y == 388)
+				{
+					type = 0;
+				}
+				else if (x >= 188 && x <= 364 && y == 476)
+				{
+					type = 0;
+				}
+				else if (x == 188 && y == 564)
+				{
+					type = 0;
+				}
+				else if (x >= 188 && x <= 364 && y == 652)
+				{
+					type = 0;
+				}
+				else if (y == 828)
+				{
+					type = 0;
+				}
+				else
+				{
+					type = 14;
+				}
+			}
+
+			if (level == 3 && y <= 900)
+			{
+				if (x >= 188 && x <= 364 && y == 300)
+				{
+					type = 0;
+				}
+				else if (x == 364 && y == 388)
+				{
+					type = 0;
+				}
+				else if (x >= 188 && x <= 364 && y == 476)
+				{
+					type = 0;
+				}
+				else if (x == 364 && y == 564)
+				{
+					type = 0;
+				}
+				else if (x >= 188 && x <= 364 && y == 652)
+				{
+					type = 0;
+				}
+				else if (y == 828)
+				{
+					type = 0;
+				}
+				else
+				{
+					type = 14;
+				}
+			}
+			if (level == 4)
+			{
+				type = 6;
+			}
+				//if (y >= 5000.f && y<=5700.f)
 			//{
 			//	type = 11;
 			//}
@@ -271,9 +384,14 @@ void Game::createBlock()
 			//	type = 6;
 			//	
 			//}
+			
 			if (this->type <= 5)
 			{
 				this->dirtBlocks.push_back(new Block_dirt(x, y));
+				if (this->player->getPosition().y>= 6500)
+				{
+					this->dirtBlocks.push_back(new Block_dirt(x+1000.f, y+500.f));
+				}
 			}
 			else if (this->type == 6 || this->type == 7)
 			{
@@ -289,8 +407,15 @@ void Game::createBlock()
 			}
 			else if (this->type == 9)
 			{
-				this->orc_enemies.push_back(new Orc(x, y));
-				this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
+				if (level == 1)
+				{
+					if (difficulty >= 2.f)
+					{
+						this->orc_enemies.push_back(new Orc(x, y));
+						this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
+					}
+				}
+
 			}
 			else if(this->type == 10 )
 			{
@@ -305,7 +430,7 @@ void Game::createBlock()
 			{
 
 			}
-
+			
 			x += 88;
 		}
 		//if (x >= 452)
@@ -389,11 +514,16 @@ void Game::update_enemy()
 
 	for (int i = 0; i < this->orc_enemies.size(); ++i)
 	{
+		this->delayEnemyAttack=this->timeEnemyAttack.getElapsedTime().asSeconds();
 		if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_orc()))
 		{
+			if (this->delayEnemyAttack >= 1.5f)
+			{
+				this->timeEnemyAttack.restart();
+				health--;
+			}
 			orc_enemies[i]->check_move = 3;
 
-			health--;
 		}
 		else if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_hit_orc()))
 		{
@@ -411,10 +541,19 @@ void Game::update_enemy()
 		{
 			orc_enemies[i]->check_view = false;
 		}
+
+		if (change_level == true)
+		{
+			if (this->player->getPosition().y - 200.f >= this->orc_enemies[i]->getPosition().y)
+			{
+				this->orc_enemies[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
+			}
+
+		}
 		if (this->player->getPosition().y - 400.f >= this->orc_enemies[i]->getPosition().y)
 		{
 			this->orc_enemies.erase(this->orc_enemies.begin() + i);
-			//std::cout << this->player->getPosition().y << " : " << this->orc_enemies[i]->getPosition().y<<"\n";
+		//	std::cout << this->player->getPosition().y << " : " << this->orc_enemies[i]->getPosition().y<<"\n";
 		}
 		orc_enemies[i]->update_orc();
 	}
@@ -471,7 +610,7 @@ void Game::update_dirtBlock()
 {
 	for (int i = 0; i < this->dirtBlocks.size(); ++i)
 	{
- 
+
 		if (this->player->getGlobalBounds_down().intersects(this->dirtBlocks[i]->getGlobalBounds()))
 		{
 			this->player->setPosition(this->player->getPosition().x, this->dirtBlocks[i]->getPosition().y - 88.f);
@@ -504,6 +643,15 @@ void Game::update_dirtBlock()
 				//	this->player->setPosition(this->dirtBlocks[i]->getPosition().x - this->player->hitbox_player.getGlobalBounds().width, this->player->getPosition().y);
 				//}
 			//}
+		}
+
+		if (change_level == true)
+		{
+			if(this->player->getPosition().y-200.f  >= this->dirtBlocks[i]->getPosition().y)
+			{
+				this->dirtBlocks[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
+			}
+			
 		}
 		if (this->player->getPosition().y - 400.f >= this->dirtBlocks[i]->getPosition().y)
 		{
@@ -582,9 +730,18 @@ void Game::update_stoneBlock()
 			//	}
 			//}
 		}
+		if (change_level == true)
+		{
+			if (this->player->getPosition().y-200.f  >= this->stoneBlocks[i]->getPosition().y)
+			{
+				this->stoneBlocks[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
+			}
+
+		}
 		if (this->player->getPosition().y - 400.f >= this->stoneBlocks[i]->getPosition().y)
 		{
 			this->stoneBlocks.erase(this->stoneBlocks.begin() + i);
+		
 		}
 
 		stoneBlocks[i]->update();
@@ -596,10 +753,17 @@ void Game::update_firer()
 
 	for (int i = 0; i < this->firers.size(); ++i)
 	{
+		if (change_level == true)
+		{
+			if (this->player->getPosition().y - 200.f >= this->firers[i]->getPosition().y)
+			{
+				this->firers[i]->setPosition(-200.f, this->player->getPosition().y + 1000.f);
+			}
 
+		}
 		if (this->player->getPosition().y - 400.f >= this->firers[i]->getPosition().y )
 		{
-			this->firers[i]->setPosition(-100.f, this->player->getPosition().y + 700.f);
+			this->firers[i]->setPosition(-100.f, this->player->getPosition().y + 1500.f);
 			
 		}
 		if (this->player->getPosition().y - 800.f >= this->firers[i]->getPosition().y)
@@ -613,17 +777,38 @@ void Game::update_firer()
 
 void Game::update_fire()
 {
+	this->delayfire = this->timefire.getElapsedTime().asSeconds();
 	for (int i = 0; i < this->fires.size(); ++i)
 	{
+		if (this->delayfire >= 1.f)
+		{
+			if (this->player->getGlobalBounds_hit().intersects(this->fires[i]->getGlobalBounds()))
+			{
+				health--;
+				this->timefire.restart();
+			}
+
+		}
 		if (this->player->getGlobalBounds_hit().intersects(this->fires[i]->getGlobalBounds()))
 		{
-			this->health--;
+
 			this->fires.push_back(new Fire(100.f, this->fires[i]->getPosition().y));
 			this->fires.erase(fires.begin() + i);
 		}
+
+	
+		if (change_level == true)
+		{
+			if (this->player->getPosition().y >= this->fires[i]->getPosition().y)
+			{
+				this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 1000.f);
+			}
+
+		}
 		if (this->player->getPosition().y - 400.f >= this->fires[i]->getPosition().y)
 		{
-			this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 500.f);
+
+			this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
 
 		}
 		if (this->player->getPosition().y - 800.f >= this->fires[i]->getPosition().y)
@@ -649,6 +834,7 @@ void Game::update_fireball()
 		}
 		if (this->player->getPosition().y+ 500.f <= this->fireballs[i]->getPosition().y )
 		{
+
 			this->fireballs.erase(this->fireballs.begin() + i);
 
 		}
@@ -673,19 +859,33 @@ void Game::updateGUI()
 	scoreNum << "Score :" << score;
 	healthNum << " x " << health;
 	this->healthText.setString(healthNum.str());
-	this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 470.f));
-	this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 470.f));
+	this->bossHpBar.setSize(sf::Vector2f(500.f, this->bossHpBar.getSize().y));
+	if (level == 4 && this->player->getPosition().y >= 400)
+	{
+		this->scoreText.setPosition(sf::Vector2f(480.f,240.f));
+		this->healthText.setPosition(sf::Vector2f(35.f, 250.f));
+		this->health_s.setPosition(sf::Vector2f(0.f, 250.f));
+
+		this->bossHpBar.setPosition(sf::Vector2f(80.f, 350.f));
+	}
+	else
+	{
+		this->scoreText.setPosition(sf::Vector2f(480.f, this->player->getPosition().y - 470.f));
+		this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 470.f));
+		this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 470.f));
+
+	}
+	
 
 	this->scoreText.setString(scoreNum.str());
-	this->scoreText.setPosition(sf::Vector2f(480.f, this->player->getPosition().y - 470.f));
+	
 
-	this->bossHpBar.setSize(sf::Vector2f(500.f, this->bossHpBar.getSize().y));
-	this->bossHpBar.setPosition(sf::Vector2f(90.f, this->player->getPosition().y - 420.f));
+
 }
 
 void Game::boss_attack()
 {
-	spawnTimer += 20.f;
+	//spawnTimer += 20.f;
 	if (spawnTimer == 2000.f)
 	{
 
@@ -740,8 +940,17 @@ void Game::update_coin()
 				//printf("%d\n", score);
 			}
 		}
+		if (change_level == true)
+		{
+			if (this->player->getPosition().y - 200.f >= this->coins[i]->getPosition().y)
+			{
+				this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
+			}
+
+		}
 		if (this->player->getPosition().y - 400.f >= this->coins[i]->getPosition().y)
 		{
+
 			this->coins.erase(this->coins.begin() + i);
 		}
 		
@@ -814,7 +1023,7 @@ void Game::updatePlayer()
 	this->boss->update_boss();
 	this->update_coin();
 	this->player->update();
-	//std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
+	std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
 }
 
 void Game::updateWorld()
@@ -822,7 +1031,11 @@ void Game::updateWorld()
 	int WorldY;
 	//worldY += 900.f;
 	WorldY = this->player->getPosition().y;
-	if (this->player->getPosition().y >= 450)
+	if (level == 4)
+	{
+		this->worldBackground.setPosition(0.f, 250.f);
+	}
+	else if (this->player->getPosition().y >= 450)
 	{
 		this->worldBackground.setPosition(0.f, WorldY - 400.f);
 	}
@@ -895,15 +1108,30 @@ void Game::update()
 	//this->enemy_view();
 }
 
+void Game::renderBlock()
+{
+
+	for (auto* dirtblock : this->dirtBlocks)
+	{
+		dirtblock->render(*this->window);
+	}
+	for (auto* stoneblock : this->stoneBlocks)
+	{
+		stoneblock->render(*this->window);
+	}
+}
+
 void Game::renderGUI()
 {
 	this->window->draw(health_s);
 	this->window->draw(scoreText);
 	this->window->draw(healthText);
-	if (this->player->getPosition().y >= 5000.f)
+	if (level == 4 && this->player->getPosition().y>=880)
 	{
 		this->window->draw(bossHpBar);
 	}
+
+
 	
 }
 
@@ -947,6 +1175,7 @@ void Game::renderWorld()
 	//{
 	//	worldbackground->render(*this->window);
 	//}
+
 	this->window->draw(this->worldBackground);
 
 }
@@ -960,24 +1189,27 @@ void Game::render()
 	//this->showBlock();
 	this->createBlock();
 
+	this->renderBlock();
+	if (this->player->getPosition().y <= 1000.f && this->level == 1)
+	{
+		this->window->draw(this->op_Background); 
+	}
 
-	for (auto* dirtblock : this->dirtBlocks)
-	{
-		dirtblock->render(*this->window);
-	}
-	for (auto* stoneblock : this->stoneBlocks)
-	{
-		stoneblock->render(*this->window);
-	}
-	this->window->draw(this->op_Background);
 	this->renderGUI();
 	this->renderPlayer();
 	
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));
 	this->view.setSize(650.f,950.f);
-
-	this->view.setCenter(650.f/2,this->player->getPosition().y);
+	if (level == 4)
+	{
+		this->view.setCenter(650.f / 2, this->player->getPosition().y-200.f);
+	}
+	else
+	{
+		this->view.setCenter(650.f / 2, this->player->getPosition().y);
+	}
 	this->window->setView(view);
+
 
 	this->window->display();
 }

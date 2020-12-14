@@ -35,6 +35,7 @@ public:
 	Orc(float pos_x,float pos_y);
 	virtual ~Orc();
 	//void spawn_orc();
+	void setPosition(const float x, const float y);
 	sf::RectangleShape hitbox_orc;
 	sf::RectangleShape viewbox_orc;
 	//sf::CircleShape circ;

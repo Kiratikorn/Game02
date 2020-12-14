@@ -31,6 +31,11 @@ const sf::FloatRect Block_dirt::getGlobalBounds() const
 	return this->dirt.getGlobalBounds();;
 }
 
+void Block_dirt::setPosition(const float x, const float y)
+{
+	this->dirt.setPosition(x, y);
+}
+
 void Block_dirt::update()
 {
 	this->createBlock_dirt();

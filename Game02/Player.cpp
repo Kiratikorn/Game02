@@ -241,7 +241,7 @@ void Player::updateMovement()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 	{
 		//sprite.move(0.f, 5.f);
-		if (delaydig >=1.f)
+		if (delaydig >=1.f)	//delay 1
 		{
 			this->animState = PLAYER_ANIMATION_STATES::DIG;
 			this->digdown = true;

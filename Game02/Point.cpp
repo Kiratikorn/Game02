@@ -32,6 +32,11 @@ const sf::FloatRect Point::getGlobalBounds_coin() const
 	return this->coin.getGlobalBounds();
 }
 
+void Point::setPosition(const float x, const float y)
+{
+	this->coin.setPosition(x, y);
+}
+
 void Point::update_point()
 {
 }

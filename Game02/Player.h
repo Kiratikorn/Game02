@@ -12,6 +12,7 @@ private:
 	sf::Clock animationTimer;
 	sf::Clock time_dig;
 	sf::Clock time_attack;
+
 	float delayAttack;
 	float delaydig;
 

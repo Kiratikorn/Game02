@@ -29,12 +29,21 @@ class Game
 private:
 	int x = 100, y = 500;
 	int column, row = 0,spawn;
-	int health=3;
+	int health=5;
 	int score=0;
 	int firecheck=0;
+	int level = 1;
 	float worldY=0;
 	int fireballX;
+	float difficulty;
+	bool change_level=false;
 	bool bossskill=false;
+
+	sf::Clock timeEnemyAttack;
+	sf::Clock timefire;
+	sf::Clock timedifficulty;
+	float delayEnemyAttack;
+	float delayfire;
 
 	sf::RenderWindow* window;
 	sf::Event ev;
@@ -86,7 +95,6 @@ private:
 	float spawnTimer=0;
 	float spawnTimerMax;
 
-	
 public:
 	Game();
 	virtual ~Game();
@@ -123,13 +131,14 @@ public:
 	float plat_top_hit;
 	float plat_bottom_hit ;
 	void collide();
-	float level[100];
+	//float level[100];
 	//Platform level[100];
 	void updatePlayer();
 	void updateWorld();
 	void updateCollision();
 	//void run();
 	void update();
+	void renderBlock();
 	void renderGUI();
 	void renderPlayer();
 	void renderWorld();

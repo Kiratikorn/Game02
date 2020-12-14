@@ -12,6 +12,7 @@ public:
 	virtual ~Block_Stone();
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds() const;
+	void setPosition(const float x, const float y);
 	void update();
 	void render(sf::RenderTarget& target);
 };

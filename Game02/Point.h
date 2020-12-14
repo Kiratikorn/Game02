@@ -12,6 +12,7 @@ public:
 	virtual ~Point();
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds_coin() const;
+	void setPosition(const float x, const float y);
 	void update_point();
 	void render(sf::RenderTarget& target);
 };

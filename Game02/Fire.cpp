@@ -17,7 +17,7 @@ Fire::Fire(float pos_x, float pos_y)
 	this->initTexture();
 	this->initSprite();
 	this->fire_s.setPosition(pos_x, pos_y);
-	x = pos_x;
+	fireX = pos_x;
 }
 
 Fire::~Fire()
@@ -28,7 +28,6 @@ void Fire::setPosition(const float x, const float y)
 {
 	this->fire_s.setPosition(x, y);
 	xplus = 0;
-
 }
 
 const sf::Vector2f Fire::getPosition() const
@@ -43,17 +42,17 @@ const sf::FloatRect Fire::getGlobalBounds() const
 
 void Fire::updateMovement_fire()
 {
-	if (x == -200.f)
+	if (fireX == -200.f)
 	{
 		xplus = 0;
 	}
 	if (xplus == 4)
 	{
-		x += xplus;
-		fire_s.setPosition(x, this->fire_s.getPosition().y);
-		if (x >= 550.f)
+		fireX += xplus;
+		fire_s.setPosition(fireX, this->fire_s.getPosition().y);
+		if (fireX >= 550.f)
 		{
-			x = 100.f;
+			fireX = 100.f;
 		}
 	}
 	
