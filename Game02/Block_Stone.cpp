@@ -19,7 +19,7 @@ Block_Stone::Block_Stone(float pos_x, float pos_y)
 {
 	this->initTexture();
 	this->stone.setPosition(pos_x, pos_y);
-	this->stoneShape.setPosition(pos_x, pos_y);
+	//this->stoneShape.setPosition(pos_x, pos_y);
 }
 
 Block_Stone::~Block_Stone()
@@ -29,13 +29,13 @@ Block_Stone::~Block_Stone()
 const sf::Vector2f Block_Stone::getPosition() const
 {
 	//return this->stone.getPosition();
-	return this->stoneShape.getPosition();
+	return this->stone.getPosition();
 }
 
 const sf::FloatRect Block_Stone::getGlobalBounds() const
 {
 	//return this->stone.getGlobalBounds();
-	return this->stoneShape.getGlobalBounds();
+	return this->stone.getGlobalBounds();
 }
 
 void Block_Stone::setPosition(const float x, const float y)
@@ -51,5 +51,5 @@ void Block_Stone::update()
 void Block_Stone::render(sf::RenderTarget& target)
 {
 	
-	target.draw(this->stoneShape);
+	target.draw(this->stone);
 }

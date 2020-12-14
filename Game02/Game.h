@@ -37,6 +37,7 @@ private:
 	int fireballX;
 	int difficulty;
 	int delayLoadMap;
+	int delayFireball;
 	bool change_level=false;
 	bool bossskill=false;
 
@@ -44,6 +45,9 @@ private:
 	sf::Clock timefire;
 	sf::Clock timedifficulty;
 	sf::Clock timeLoadMap;
+	sf::Clock timeFireball;
+
+
 	float delayEnemyAttack;
 	float delayfire;
 

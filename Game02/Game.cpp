@@ -44,13 +44,13 @@ void Game::deleteblock()
 
 void Game::loadMap()
 {
-	if (delayLoadMap <= 3 && level > 1)
+	if (delayLoadMap <= 5 && level >=2)
 	{
 		this->player->setPosition(this->player->getPosition().x, 0.f);
 		this->player->gravity_check = false;
 		this->change_level = true;
 	}
-	else if (delayLoadMap > 3 && level > 1)
+	else if (delayLoadMap > 5 && level >=2)
 	{
 		this->player->gravity_check = true;
 		this->change_level = false;
@@ -245,7 +245,7 @@ void Game::createBlock()
 {
 	this->difficulty = this->timedifficulty.getElapsedTime().asSeconds();
 	this->delayLoadMap = this->timeLoadMap.getElapsedTime().asSeconds();
-	printf("%d\n", delayLoadMap);
+	//printf("%d\n", delayLoadMap);
 	if (this->player->getPosition().y+600.f>=this->y)
 	{
 		
@@ -305,11 +305,12 @@ void Game::createBlock()
 				
 				if (y > 8500)
 				{
-					change_level = true;
+					//change_level = true;
 					level = 3;
 					x = 100;
 					y = 212;
-					this->player->setPosition(this->player->getPosition().x, 0.f);
+					this->timeLoadMap.restart();
+					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
 			}
 			if (level == 3 && y >= 8700)
@@ -318,11 +319,12 @@ void Game::createBlock()
 			
 				if (y > 9500)
 				{
-					change_level = true;
+					//change_level = true;
 					level = 4;
 					x = 100;
 					y = 950;
-					this->player->setPosition(this->player->getPosition().x, 0.f);
+					this->timeLoadMap.restart();
+					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
 			}
 
@@ -415,7 +417,7 @@ void Game::createBlock()
 			else if (this->type == 6 || this->type == 7)
 			{
 				this->stoneBlocks.push_back(new Block_Stone(x, y));
-				this->stoneBlocks.push_back(new Block_Stone(x + 800.f, y + 500.f));
+				//this->stoneBlocks.push_back(new Block_Stone(x + 800.f, y + 500.f));
 				
 			}
 			else if (this->type == 8)
@@ -570,6 +572,11 @@ void Game::update_enemy()
 	for (int i = 0; i < this->orc_enemies.size(); ++i)
 	{
 		this->delayEnemyAttack=this->timeEnemyAttack.getElapsedTime().asSeconds();
+		if (change_level == true && this->orc_enemies[i]->getPosition().y >= 700.f)
+		{
+			this->orc_enemies[i]->setPosition(-200.f, 500.f);
+
+		}
 		if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_orc()))
 		{
 			if (this->delayEnemyAttack >= 1.5f)
@@ -597,14 +604,7 @@ void Game::update_enemy()
 			orc_enemies[i]->check_view = false;
 		}
 
-		if (change_level == true)
-		{
-			if (this->player->getPosition().y - 200.f >= this->orc_enemies[i]->getPosition().y)
-			{
-				this->orc_enemies[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
-			}
 
-		}
 		if (this->player->getPosition().y - 700.f >= this->orc_enemies[i]->getPosition().y && orc_enemies[i]->getPosition().x == -200.f)
 		{
 			if (this->level == 1 || this->level == 2)
@@ -676,7 +676,11 @@ void Game::update_dirtBlock()
 {
 	for (int i = 0; i < this->dirtBlocks.size(); ++i)
 	{
+		if (change_level == true && this->dirtBlocks[i]->getPosition().y >= 700.f)
+		{
+			this->dirtBlocks[i]->setPosition(-200.f, 500.f);
 
+		}
 		if (this->player->getGlobalBounds_down().intersects(this->dirtBlocks[i]->getGlobalBounds()))
 		{
 			this->player->setPosition(this->player->getPosition().x, this->dirtBlocks[i]->getPosition().y - 88.f);
@@ -711,14 +715,7 @@ void Game::update_dirtBlock()
 			//}
 		}
 
-		if (change_level == true)
-		{
-			if(this->player->getPosition().y-200.f  >= this->dirtBlocks[i]->getPosition().y)
-			{
-				this->dirtBlocks[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
-			}
-			
-		}
+
 		if (this->player->getPosition().y - 800.f >= this->dirtBlocks[i]->getPosition().y)
 		{
 			this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
@@ -760,6 +757,11 @@ void Game::update_stoneBlock()
 {
 	for (int i = 0; i < this->stoneBlocks.size(); ++i)
 	{
+		if (change_level == true && this->stoneBlocks[i]->getPosition().y >= 700.f)
+		{
+			this->stoneBlocks[i]->setPosition(-200.f, 500.f);
+
+		}
 		if (this->player->getGlobalBounds_down().intersects(this->stoneBlocks[i]->getGlobalBounds()))
 		{
 			this->player->setPosition(this->player->getPosition().x, this->stoneBlocks[i]->getPosition().y - 88.f);
@@ -796,14 +798,7 @@ void Game::update_stoneBlock()
 			//	}
 			//}
 		}
-		if (change_level == true)
-		{
-			if (this->player->getPosition().y-200.f  >= this->stoneBlocks[i]->getPosition().y)
-			{
-				this->stoneBlocks[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
-			}
 
-		}
 		if (this->player->getPosition().y - 800.f >= this->stoneBlocks[i]->getPosition().y)
 		{
 			this->stoneBlocks.erase(this->stoneBlocks.begin() + i);
@@ -819,12 +814,9 @@ void Game::update_firer()
 
 	for (int i = 0; i < this->firers.size(); ++i)
 	{
-		if (change_level == true)
+		if (change_level == true && this->firers[i]->getPosition().y >= 700.f)
 		{
-			if (this->player->getPosition().y - 200.f >= this->firers[i]->getPosition().y)
-			{
-				this->firers[i]->setPosition(-200.f, this->player->getPosition().y + 1000.f);
-			}
+			this->firers[i]->setPosition(-200.f, 500.f);
 
 		}
 		if (this->player->getPosition().y - 700.f >= this->firers[i]->getPosition().y && firers[i]->getPosition().x == -200.f)
@@ -1007,6 +999,11 @@ void Game::update_coin()
 	for (int i = 0; i < this->coins.size(); ++i)
 	{
 		//printf("%d A\n", coins.size());
+		if (change_level == true && this->coins[i]->getPosition().y >= 700.f)
+		{
+			this->coins[i]->setPosition(-200.f, 500.f);
+
+		}
 		if (this->player->getGlobalBounds_hit().intersects(this->coins[i]->getGlobalBounds_coin()))
 		{
 			this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
@@ -1022,14 +1019,7 @@ void Game::update_coin()
 				//printf("%d\n", score);
 			}
 		}
-		if (change_level == true)
-		{
-			if (this->player->getPosition().y - 200.f >= this->coins[i]->getPosition().y)
-			{
-				this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
-			}
 
-		}
 		if (this->player->getPosition().y - 700.f >= this->coins[i]->getPosition().y && coins[i]->getPosition().x == -100.f)
 		{
 			if (this->level == 1 || this->level == 2)
@@ -1115,7 +1105,7 @@ void Game::updatePlayer()
 	this->boss->update_boss();
 	this->update_coin();
 	this->player->update();
-	//std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
+	std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
 }
 
 void Game::updateWorld()
@@ -1297,7 +1287,7 @@ void Game::render()
 	this->view.setSize(650.f,950.f);
 	if (level == 4)
 	{
-		this->view.setCenter(650.f / 2, this->player->getPosition().y-200.f);
+		this->view.setCenter(650.f / 2, this->player->getPosition().y-280.f);
 	}
 	else
 	{
