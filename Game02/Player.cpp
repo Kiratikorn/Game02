@@ -36,7 +36,14 @@ void Player::initPhysics()
 	this->velocityMin = 1.f;
 	this->acceleration = 3.f;
 	this->drag = 0.90f;
-	this->gravity_player = 2.f;
+	if (this->gravity_check = true)
+	{
+		this->gravity_player = 2.f;
+	}
+	else
+	{
+		this->gravity_player = 0.f;
+	}
 	this->velocityMaxY = 15.f;
 }
 
@@ -230,7 +237,7 @@ void Player::updateMovement()
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
 	{
 		//sprite.move(0.f, -5.f);
-		if (delaydig >= 0.f)
+		if (delaydig >= 1.f)
 		{
 			this->digup = true;
 			time_dig.restart();
@@ -241,7 +248,7 @@ void Player::updateMovement()
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
 	{
 		//sprite.move(0.f, 5.f);
-		if (delaydig >=1.f)	//delay 1
+		if (delaydig >=0.f)	//delay 1
 		{
 			this->animState = PLAYER_ANIMATION_STATES::DIG;
 			this->digdown = true;

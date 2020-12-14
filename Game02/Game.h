@@ -36,12 +36,14 @@ private:
 	float worldY=0;
 	int fireballX;
 	int difficulty;
+	int delayLoadMap;
 	bool change_level=false;
 	bool bossskill=false;
 
 	sf::Clock timeEnemyAttack;
 	sf::Clock timefire;
 	sf::Clock timedifficulty;
+	sf::Clock timeLoadMap;
 	float delayEnemyAttack;
 	float delayfire;
 
@@ -90,6 +92,7 @@ private:
 	void initPlayer();
 	void initEnemy();
 	void deleteblock();
+	void loadMap();
 	int BlockX = 100, BlockY = 400;
 
 	float spawnTimer=0;

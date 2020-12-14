@@ -42,6 +42,21 @@ void Game::deleteblock()
 	//if(this->player->getPosition().y>=blocks[i].getposition)
 }
 
+void Game::loadMap()
+{
+	if (delayLoadMap <= 3 && level > 1)
+	{
+		this->player->setPosition(this->player->getPosition().x, 0.f);
+		this->player->gravity_check = false;
+		this->change_level = true;
+	}
+	else if (delayLoadMap > 3 && level > 1)
+	{
+		this->player->gravity_check = true;
+		this->change_level = false;
+	}
+}
+
 Game::Game()
 {
 	this->initWindow();
@@ -229,7 +244,8 @@ void Game::showBlock()
 void Game::createBlock()
 {
 	this->difficulty = this->timedifficulty.getElapsedTime().asSeconds();
-	printf("%d\n", difficulty);
+	this->delayLoadMap = this->timeLoadMap.getElapsedTime().asSeconds();
+	printf("%d\n", delayLoadMap);
 	if (this->player->getPosition().y+600.f>=this->y)
 	{
 		
@@ -275,11 +291,12 @@ void Game::createBlock()
 				
 				if (y > 7000)
 				{
-					change_level = true;
+					//change_level = true;
 					level = 2;
 					x = 100; 
 					y = 212;
-					this->player->setPosition(this->player->getPosition().x, 0.f);
+					this->timeLoadMap.restart();
+					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
 			}
 			if (level == 2 && y >= 7700)
@@ -1156,6 +1173,8 @@ void Game::update()
 			this->player->resetAnimationTimer();
 		}
 	}
+	this->loadMap();
+
 	this->updateGUI();
 
 	this->update_enemy();

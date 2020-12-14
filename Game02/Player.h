@@ -55,7 +55,7 @@ public :
 	float left_hit;
 	float top_hit;
 	float right_hit;
-
+	bool gravity_check = true;
 	float gravity_player;
 
 	void setPos(float x,float y);
