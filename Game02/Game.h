@@ -35,7 +35,7 @@ private:
 	int level = 1;
 	float worldY=0;
 	int fireballX;
-	float difficulty;
+	int difficulty;
 	bool change_level=false;
 	bool bossskill=false;
 

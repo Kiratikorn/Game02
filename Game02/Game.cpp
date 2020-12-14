@@ -228,10 +228,12 @@ void Game::showBlock()
 
 void Game::createBlock()
 {
-
+	this->difficulty = this->timedifficulty.getElapsedTime().asSeconds();
+	printf("%d\n", difficulty);
 	if (this->player->getPosition().y+600.f>=this->y)
 	{
-		this->difficulty = this->timedifficulty.getElapsedTime().asSeconds();
+		
+
 		for (row = 0; row < 5; row++)
 		{
 			Block_ran();
@@ -409,21 +411,57 @@ void Game::createBlock()
 			{
 				if (level == 1)
 				{
-					if (difficulty >= 2.f)
+					if (difficulty%3 ==0)
 					{
 						this->orc_enemies.push_back(new Orc(x, y));
-						this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
+						//this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
 					}
+				}
+				if (level == 2)
+				{
+					if (difficulty % 2 == 0)
+					{
+						this->orc_enemies.push_back(new Orc(x, y));
+						//this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
+					}
+				}
+				if (level == 3)
+				{
+	
+					this->orc_enemies.push_back(new Orc(x, y));
+					//this->orc_enemies.push_back(new Orc(x + 1000.f, y + 500.f));
+
+					
 				}
 
 			}
 			else if(this->type == 10 )
 			{
-				if (firecheck % 3 != 1)
+				if (level == 1)
 				{
-					this->fires.push_back(new Fire(100.f, y + 10.f));
-					this->firers.push_back(new firer(33.f, y));
-				}	
+					if (difficulty %3 == 1 && firecheck % 3 != 1)
+					{
+						this->fires.push_back(new Fire(100.f, y + 10.f));
+						this->firers.push_back(new firer(33.f, y));
+					}
+				}
+				if (level == 2)
+				{
+					if (difficulty % 2 == 1 && firecheck % 3 != 1)
+					{
+						this->fires.push_back(new Fire(100.f, y + 10.f));
+						this->firers.push_back(new firer(33.f, y));
+					}
+				}
+				if (level == 3)
+				{
+					if (firecheck % 3 != 1)
+					{
+						this->fires.push_back(new Fire(100.f, y + 10.f));
+						this->firers.push_back(new firer(33.f, y));
+					}
+				}
+
 				firecheck++;
 			}
 			else
@@ -550,10 +588,21 @@ void Game::update_enemy()
 			}
 
 		}
-		if (this->player->getPosition().y - 400.f >= this->orc_enemies[i]->getPosition().y)
+		if (this->player->getPosition().y - 700.f >= this->orc_enemies[i]->getPosition().y && orc_enemies[i]->getPosition().x == -200.f)
 		{
-			this->orc_enemies.erase(this->orc_enemies.begin() + i);
-		//	std::cout << this->player->getPosition().y << " : " << this->orc_enemies[i]->getPosition().y<<"\n";
+			if (this->level == 1 || this->level == 2)
+			{
+				this->orc_enemies.erase(this->orc_enemies.begin() + i);
+			}
+		}
+		else if (this->player->getPosition().y - 800.f >= this->orc_enemies[i]->getPosition().y)
+		{
+			if (this->level == 1 || this->level == 2)
+			{
+				this->orc_enemies[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
+				orc_enemies[i]->check_view = false;
+			}
+
 		}
 		orc_enemies[i]->update_orc();
 	}
@@ -653,7 +702,7 @@ void Game::update_dirtBlock()
 			}
 			
 		}
-		if (this->player->getPosition().y - 400.f >= this->dirtBlocks[i]->getPosition().y)
+		if (this->player->getPosition().y - 800.f >= this->dirtBlocks[i]->getPosition().y)
 		{
 			this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
 		}
@@ -738,7 +787,7 @@ void Game::update_stoneBlock()
 			}
 
 		}
-		if (this->player->getPosition().y - 400.f >= this->stoneBlocks[i]->getPosition().y)
+		if (this->player->getPosition().y - 800.f >= this->stoneBlocks[i]->getPosition().y)
 		{
 			this->stoneBlocks.erase(this->stoneBlocks.begin() + i);
 		
@@ -761,17 +810,22 @@ void Game::update_firer()
 			}
 
 		}
-		if (this->player->getPosition().y - 400.f >= this->firers[i]->getPosition().y )
+		if (this->player->getPosition().y - 700.f >= this->firers[i]->getPosition().y && firers[i]->getPosition().x == -200.f)
 		{
-			this->firers[i]->setPosition(-100.f, this->player->getPosition().y + 1500.f);
-			
+			if (this->level == 1 || this->level == 2)
+			{
+				this->firers.erase(this->firers.begin() + i);
+			}
 		}
-		if (this->player->getPosition().y - 800.f >= this->firers[i]->getPosition().y)
+		else if (this->player->getPosition().y - 800.f >= this->firers[i]->getPosition().y)
 		{
-			this->firers.erase(this->firers.begin()+i );
-
+			if (this->level == 1 || this->level == 2)
+			{
+				this->firers[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
+			}
 
 		}
+
 	}
 }
 
@@ -811,11 +865,22 @@ void Game::update_fire()
 			this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
 
 		}
-		if (this->player->getPosition().y - 800.f >= this->fires[i]->getPosition().y)
+		if (this->player->getPosition().y - 700.f >= this->fires[i]->getPosition().y && fires[i]->getPosition().x == -200.f)
 		{
-			this->fires.erase(this->fires.begin() + i);
+			if (this->level == 1 || this->level == 2)
+			{
+				this->fires.erase(this->fires.begin() + i);
+			}
+		}
+		else if (this->player->getPosition().y - 800.f >= this->fires[i]->getPosition().y)
+		{
+			if (this->level == 1 || this->level == 2)
+			{
+				this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
+			}
 
 		}
+
 
 
 		fires[i]->update_fire();
@@ -927,7 +992,7 @@ void Game::update_coin()
 		//printf("%d A\n", coins.size());
 		if (this->player->getGlobalBounds_hit().intersects(this->coins[i]->getGlobalBounds_coin()))
 		{
-			this->coins.erase(this->coins.begin()+i);
+			this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
 			this->score+=5;
 			//printf("%d\n", score);
 		}
@@ -948,10 +1013,20 @@ void Game::update_coin()
 			}
 
 		}
-		if (this->player->getPosition().y - 400.f >= this->coins[i]->getPosition().y)
+		if (this->player->getPosition().y - 700.f >= this->coins[i]->getPosition().y && coins[i]->getPosition().x == -100.f)
 		{
+			if (this->level == 1 || this->level == 2)
+			{
+				this->coins.erase(this->coins.begin() + i);
+			}
+		}
+		else if (this->player->getPosition().y - 800.f >= this->coins[i]->getPosition().y)
+		{
+			if (this->level == 1 || this->level == 2)
+			{
+				this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1500.f);
+			}
 
-			this->coins.erase(this->coins.begin() + i);
 		}
 		
 	}
@@ -1023,7 +1098,7 @@ void Game::updatePlayer()
 	this->boss->update_boss();
 	this->update_coin();
 	this->player->update();
-	std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
+	//std::cout << this->player->getPosition().x << " -- " << this->player->getPosition().y << "\n";
 }
 
 void Game::updateWorld()
@@ -1037,7 +1112,7 @@ void Game::updateWorld()
 	}
 	else if (this->player->getPosition().y >= 450)
 	{
-		this->worldBackground.setPosition(0.f, WorldY - 400.f);
+		this->worldBackground.setPosition(0.f, WorldY - 450.f);
 	}
 
 	this->op_Background.setPosition(-73.f, 60.f);
@@ -1182,6 +1257,7 @@ void Game::renderWorld()
 
 void Game::render()
 {
+
 	this->window->clear();
 	//draw world
 
