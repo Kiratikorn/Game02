@@ -21,6 +21,8 @@ private:
 public:
 	Fire_above();
 	virtual ~Fire_above();
+	int opRestart = 0;
+	bool fire_above_play = false;
 	int speedIncrease=1;
 	void setPosition(const float x, const float y);
 	void updateMovement_FA();

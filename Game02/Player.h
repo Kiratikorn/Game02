@@ -39,7 +39,7 @@ private:
 public :
 	Player();
 	virtual ~Player();
-	
+	bool player_play =false;
 	//hitbox_player
 	sf::RectangleShape hitbox_player;
 	sf::RectangleShape nextbox_player;

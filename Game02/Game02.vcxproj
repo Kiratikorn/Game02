@@ -29,6 +29,7 @@
     <ClInclude Include="firer.h" />
     <ClInclude Include="Fire_above.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Textbox.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Mainmenu.h" />
     <ClInclude Include="Orc.h" />

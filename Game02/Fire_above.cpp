@@ -46,27 +46,38 @@ void Fire_above::setPosition(const float x, const float y)
 
 void Fire_above::updateMovement_FA()
 {
-	this->animState = FA_ANIMATION_STATES::IDLE_FA;
-	this->speed = this->timeSpeed.getElapsedTime().asSeconds();
-	if (startfire == true)
+	if (fire_above_play == true)
 	{
-		if (speed > 10 && speedIncrease==3)
-		{
-			speed = 10;
-		}
-		else if (speed > 15)
-		{
-			speed = 15;
-		}
-		fire_above_S.move(0.f, speed * speedIncrease * 0.1);
+		opRestart = 1;
 	}
-	else if (this->speed >= 5)
+	if (opRestart == 0)
 	{
-		startfire = true;
 		this->timeSpeed.restart();
 	}
+	if (fire_above_play == true && opRestart==1)
+	{
 
-	
+		this->animState = FA_ANIMATION_STATES::IDLE_FA;
+		this->speed = this->timeSpeed.getElapsedTime().asSeconds();
+		if (startfire == true)
+		{
+			if (speed > 10 && speedIncrease == 3)
+			{
+				speed = 10;
+			}
+			else if (speed > 15)
+			{
+				speed = 15;
+			}
+			fire_above_S.move(0.f, speed * speedIncrease * 0.1);
+		}
+		else if (this->speed >= 5)
+		{
+			startfire = true;
+			this->timeSpeed.restart();
+		}
+
+	}
 }
 
 const bool& Fire_above::getAnimSwitch_FA()

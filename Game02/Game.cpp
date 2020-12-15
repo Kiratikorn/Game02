@@ -1,10 +1,22 @@
 #include "Game.h"
 
 
+
+void Game::playgame()
+{
+	if (play == true)
+	{
+		this->menu->playMenu = false;
+		this->player->player_play = true;
+		this->fire_above->fire_above_play = true;
+	}
+}
+
 void Game::initWindow()
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(650, 800), "Tower Escape", sf::Style::Close | sf::Style::Titlebar);
 	this->window->setFramerateLimit(60);
+	this->menu = new Mainmenu(this->window->getSize().x, window->getSize().y);
 }
 
 void Game::initWorld()
@@ -105,6 +117,12 @@ Game::~Game()
 	//{
 	//	delete i;
 	//}
+}
+
+void Game::updateMousePositions()
+{
+	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+	this->mousePosview = this->window->mapPixelToCoords(this->mousePosWindow);
 }
 
 void Game::initGUI()
@@ -1145,6 +1163,39 @@ void Game::updateCollision()
 	}
 }
 
+void Game::MenuGUI()
+{
+	Textbox playernametextbox(100, sf::Color::White, true);
+	playernametextbox.setFont(this->font);
+	playernametextbox.setPosition({ 500.f,320.f });
+	playernametextbox.setlimit(true, 10);
+	this->menu->render_Menu(*this->window);
+	if (this->menu->getBounds_1().contains(this->mousePosview)) 
+	{
+		//if (canswitch) {
+		//	this->switcs.play();
+		//	canswitch = false;
+		//}
+		this->menu->buttoncheck(1);
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			//this->clicks.play();
+			this->play = true;
+		}
+	}
+	if (this->menu->getBounds_2().contains(this->mousePosview))
+	{
+		//if (canswitch) {
+		//	this->switcs.play();
+		//	canswitch = false;
+		//}
+		this->menu->buttoncheck(2);
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+			//this->clicks.play();
+			this->window->close();
+		}
+	}
+}
+
 void Game::collide()
 {
 	for (int i = 1; i < 19; i++)
@@ -1209,19 +1260,20 @@ void Game::updateWorld()
 	//}
 }
 
-//void Game::run()
-//{
-//	while (this->window->isOpen());
-//	{
-//		this->update();
-//		this->render();
-//	}
-//}
+void Game::run()
+{
+	while (this->window->isOpen());
+	{
+		this->update();
+		this->render();
+	}
+}
 
 void Game::update()
 {
 	while (this->window->pollEvent(this->ev))
 	{
+
 		if (this->ev.type == sf::Event::Closed)
 			this->window->close();
 		else if (this->ev.type == sf::Event::KeyPressed && this->ev.key.code == sf::Keyboard::Escape)
@@ -1239,6 +1291,9 @@ void Game::update()
 			this->player->resetAnimationTimer();
 		}
 	}
+	this->playgame();
+	this->updateMousePositions();
+	
 	this->enemy_walk();
 	this->loadMap();
 
@@ -1284,9 +1339,13 @@ void Game::renderBlock()
 
 void Game::renderGUI()
 {
-	this->window->draw(health_s);
-	this->window->draw(scoreText);
-	this->window->draw(healthText);
+	if (play == true)
+	{
+		this->window->draw(health_s);
+		this->window->draw(scoreText);
+		this->window->draw(healthText);
+	}
+	
 	
 	if (level == 4 && this->player->getPosition().y>=880)
 	{
@@ -1377,7 +1436,7 @@ void Game::render()
 		this->view.setCenter(650.f / 2, this->player->getPosition().y);
 	}
 	this->window->setView(view);
-
+	this->MenuGUI();
 
 	this->window->display();
 }

@@ -224,17 +224,18 @@ void Player::updateMovement()
 	this->digup = false;
 	delaydig = time_dig.getElapsedTime().asSeconds();
 	delayAttack = time_attack.getElapsedTime().asSeconds();
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A) && player_play == true)
 	{
 		this->move_x(-1.0f, 0.f);
 		this->animState = PLAYER_ANIMATION_STATES::MOVING_LEFT;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D) && player_play == true)
 	{
 		this->move_x(1.f, 0.f);
 		this->animState = PLAYER_ANIMATION_STATES::MOVING_RIGHT;
 
-	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && player_play == true)
 	{
 		//sprite.move(0.f, -5.f);
 		if (delaydig >= 1.f)
@@ -245,7 +246,7 @@ void Player::updateMovement()
 		this->animState = PLAYER_ANIMATION_STATES::MOVING_UP;
 	}
 	
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && player_play == true)
 	{
 		//sprite.move(0.f, 5.f);
 		if (delaydig >=0.f)	//delay 1
@@ -256,7 +257,7 @@ void Player::updateMovement()
 			time_dig.restart();
 		}
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && player_play == true)
 	{
 		if (delayAttack >= 1.f)
 		{

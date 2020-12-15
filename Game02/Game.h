@@ -3,6 +3,8 @@
 #include <SFML/System.hpp>
 #include "Player.h"
 
+#include "Mainmenu.h"
+#include "Textbox.h"
 //fire
 #include "firer.h"
 #include "Fire.h"
@@ -40,6 +42,12 @@ private:
 	int delayFireball;
 	bool change_level=false;
 	bool bossskill=false;
+	bool play = false;
+	bool enterName = false;
+
+	//mouse
+	sf::Vector2i mousePosWindow;
+	sf::Vector2f mousePosview;
 
 	sf::Clock timeEnemyAttack;
 	sf::Clock timefire;
@@ -75,8 +83,9 @@ private:
 	sf::Text healthText;
 	sf::Text scoreText;
 
+	Mainmenu* menu;
 	Player* player;
-	//Orc* orc_enemy;
+	
 	std::vector<Point*> coins;
 	std::vector<Orc*> orc_enemies;
 	std::vector<Block_dirt*> dirtBlocks;
@@ -93,6 +102,8 @@ private:
 	bool ran = false;
 
 	//TileMap map;
+	
+	void playgame();
 	void initWindow();
 	void initWorld();
 	void initPlayer();
@@ -108,6 +119,9 @@ public:
 	Game();
 	virtual ~Game();
 	
+	void run();
+	void updateMousePositions();
+
 	void initGUI();
 
 	int Block_ran();
@@ -147,6 +161,8 @@ public:
 	void updateWorld();
 	void updateCollision();
 	//void run();
+	void MenuGUI();
+	
 	void update();
 	void renderBlock();
 	void renderGUI();
