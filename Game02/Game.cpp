@@ -1291,6 +1291,7 @@ void Game::update()
 			this->player->resetAnimationTimer();
 		}
 	}
+	printf(",");
 	this->playgame();
 	this->updateMousePositions();
 	
