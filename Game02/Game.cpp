@@ -289,7 +289,7 @@ void Game::createBlock()
 			{
 				type = 14;
 				
-				if (y > 7000)
+				if (y > 7200)
 				{
 					//change_level = true;
 					level = 2;
@@ -303,7 +303,7 @@ void Game::createBlock()
 			{
 				type = 14;
 				
-				if (y > 8500)
+				if (y > 8400)
 				{
 					//change_level = true;
 					level = 3;
@@ -317,7 +317,7 @@ void Game::createBlock()
 			{
 				type = 14;
 			
-				if (y > 9500)
+				if (y > 9200)
 				{
 					//change_level = true;
 					level = 4;
@@ -409,10 +409,10 @@ void Game::createBlock()
 			if (this->type <= 5)
 			{
 				this->dirtBlocks.push_back(new Block_dirt(x, y));
-				if (this->player->getPosition().y>= 6500)
-				{
-					this->dirtBlocks.push_back(new Block_dirt(x+1000.f, y+500.f));
-				}
+				//if (this->player->getPosition().y>= 6500)
+				//{
+				//	this->dirtBlocks.push_back(new Block_dirt(x+1000.f, y+500.f));
+				//}
 			}
 			else if (this->type == 6 || this->type == 7)
 			{
@@ -607,14 +607,14 @@ void Game::update_enemy()
 
 		if (this->player->getPosition().y - 700.f >= this->orc_enemies[i]->getPosition().y && orc_enemies[i]->getPosition().x == -200.f)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->orc_enemies.erase(this->orc_enemies.begin() + i);
 			}
 		}
 		else if (this->player->getPosition().y - 800.f >= this->orc_enemies[i]->getPosition().y)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->orc_enemies[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
 				orc_enemies[i]->check_view = false;
@@ -676,11 +676,16 @@ void Game::update_dirtBlock()
 {
 	for (int i = 0; i < this->dirtBlocks.size(); ++i)
 	{
+		//change level
 		if (change_level == true && this->dirtBlocks[i]->getPosition().y >= 700.f)
 		{
 			this->dirtBlocks[i]->setPosition(-200.f, 500.f);
 
 		}
+
+		//end level
+
+
 		if (this->player->getGlobalBounds_down().intersects(this->dirtBlocks[i]->getGlobalBounds()))
 		{
 			this->player->setPosition(this->player->getPosition().x, this->dirtBlocks[i]->getPosition().y - 88.f);
@@ -720,9 +725,21 @@ void Game::update_dirtBlock()
 		{
 			this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
 		}
-		if (this->player->digdown == true)
+		if (this->player->digdown == true && this->player->getGlobalBounds_down().intersects(dirtBlocks[i]->getGlobalBounds()))
 		{
-			if (this->player->getGlobalBounds_down().intersects(dirtBlocks[i]->getGlobalBounds()))
+			if (this->level == 1 && this->player->getPosition().y>=6300)
+			{
+				this->dirtBlocks[i]->setPosition(-200.f, 6500.f);
+			}
+			else if (this->level == 2 && this->player->getPosition().y >= 7500)
+			{
+				this->dirtBlocks[i]->setPosition(-200.f, 7700.f);
+			}
+			else if (this->level == 3 && this->player->getPosition().y >= 8500)
+			{
+				this->dirtBlocks[i]->setPosition(-200.f,8700.f);
+			}
+			else
 			{
 				this->dirtBlocks.erase(this->dirtBlocks.begin() + i);
 			}
@@ -798,13 +815,21 @@ void Game::update_stoneBlock()
 			//	}
 			//}
 		}
-
-		if (this->player->getPosition().y - 800.f >= this->stoneBlocks[i]->getPosition().y)
+		if (this->player->getPosition().y - 700.f >= this->stoneBlocks[i]->getPosition().y && stoneBlocks[i]->getPosition().x == -100.f)
 		{
-			this->stoneBlocks.erase(this->stoneBlocks.begin() + i);
-		
+			if (this->level == 1 || this->level == 2 || this->level == 3)
+			{
+				this->stoneBlocks.erase(this->stoneBlocks.begin() + i);
+			}
 		}
+		else if (this->player->getPosition().y - 800.f >= this->stoneBlocks[i]->getPosition().y)
+		{
+			if (this->level == 1 || this->level == 2 || this->level == 3)
+			{
+				this->stoneBlocks[i]->setPosition(-100.f, this->player->getPosition().y + 1500.f);
+			}
 
+		}
 		stoneBlocks[i]->update();
 	}
 }
@@ -821,14 +846,14 @@ void Game::update_firer()
 		}
 		if (this->player->getPosition().y - 700.f >= this->firers[i]->getPosition().y && firers[i]->getPosition().x == -200.f)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->firers.erase(this->firers.begin() + i);
 			}
 		}
 		else if (this->player->getPosition().y - 800.f >= this->firers[i]->getPosition().y)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->firers[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
 			}
@@ -876,14 +901,14 @@ void Game::update_fire()
 		}
 		if (this->player->getPosition().y - 700.f >= this->fires[i]->getPosition().y && fires[i]->getPosition().x == -200.f)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->fires.erase(this->fires.begin() + i);
 			}
 		}
 		else if (this->player->getPosition().y - 800.f >= this->fires[i]->getPosition().y)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->fires[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
 			}
@@ -960,13 +985,14 @@ void Game::updateGUI()
 void Game::boss_attack()
 {
 	//spawnTimer += 20.f;
-	if (spawnTimer == 2000.f)
+	this->delayFireball = this->timeFireball.getElapsedTime().asSeconds();
+	if (this->delayFireball>=3 && this->level ==4 && this->player->getPosition().y ==1056.f)
 	{
-
 		fireballX = rand() % 450 + 100.f;
 		this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 500.f));
-		this->firebeams.push_back(new fireBeam(500.f, this->player->getPosition().y - 400.f));
-		spawnTimer = 0.f;
+		//this->firebeams.push_back(new fireBeam(500.f, this->player->getPosition().y - 400.f));
+		//spawnTimer = 0.f;
+		this->timeFireball.restart();
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
 	{
@@ -1022,14 +1048,14 @@ void Game::update_coin()
 
 		if (this->player->getPosition().y - 700.f >= this->coins[i]->getPosition().y && coins[i]->getPosition().x == -100.f)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->coins.erase(this->coins.begin() + i);
 			}
 		}
 		else if (this->player->getPosition().y - 800.f >= this->coins[i]->getPosition().y)
 		{
-			if (this->level == 1 || this->level == 2)
+			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
 				this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1500.f);
 			}
