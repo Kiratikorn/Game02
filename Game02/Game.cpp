@@ -1165,10 +1165,7 @@ void Game::updateCollision()
 
 void Game::MenuGUI()
 {
-	Textbox playernametextbox(100, sf::Color::White, true);
-	playernametextbox.setFont(this->font);
-	playernametextbox.setPosition({ 500.f,320.f });
-	playernametextbox.setlimit(true, 10);
+
 	this->menu->render_Menu(*this->window);
 	if (this->menu->getBounds_1().contains(this->mousePosview)) 
 	{
@@ -1262,16 +1259,44 @@ void Game::updateWorld()
 
 void Game::run()
 {
+	Textbox playernametextbox(100, sf::Color::White, true);
+	playernametextbox.setFont(this->font);
+	playernametextbox.setPosition({ 500.f,320.f });
+	playernametextbox.setlimit(true, 10);
 	while (this->window->isOpen());
 	{
+		while (this->window->pollEvent(this->ev))
+		{
+			switch (ev.type)
+			{
+			case sf::Event::Closed:
+				window->close();
+
+			case sf::Event::TextEntered:
+				if (enterName) {
+					playernametextbox.typeOn(ev);
+				}
+			}
+			if (this->ev.type == sf::Event::KeyReleased &&
+				(this->ev.key.code == sf::Keyboard::A ||
+					this->ev.key.code == sf::Keyboard::D ||
+					this->ev.key.code == sf::Keyboard::W ||
+					this->ev.key.code == sf::Keyboard::S
+					)
+				)
+			{
+				this->player->resetAnimationTimer();
+			}
+		}
 		this->update();
 		this->render();
+
 	}
 }
 
 void Game::update()
 {
-	while (this->window->pollEvent(this->ev))
+	/*while (this->window->pollEvent(this->ev))
 	{
 
 		if (this->ev.type == sf::Event::Closed)
@@ -1290,9 +1315,14 @@ void Game::update()
 		{
 			this->player->resetAnimationTimer();
 		}
+	}*/
+	if (gameState == 0)
+	{
+		this->updateMousePositions();
 	}
+	
 	this->playgame();
-	this->updateMousePositions();
+	
 	
 	this->enemy_walk();
 	this->loadMap();

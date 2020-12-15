@@ -44,6 +44,7 @@ private:
 	bool bossskill=false;
 	bool play = false;
 	bool enterName = false;
+	int gameState = 0;
 
 	//mouse
 	sf::Vector2i mousePosWindow;
