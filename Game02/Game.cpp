@@ -127,8 +127,11 @@ void Game::initGUI()
 	this->scoreText.setOutlineThickness(2.f);
 
 	this->bossHpBar.setSize(sf::Vector2f(500.f, 25.f));
-	this->bossHpBar.setFillColor(sf::Color::Red);
+	this->bossHpBar.setFillColor(sf::Color::Red); 
 
+	this->BossHpTex.loadFromFile("Pic/bossHpbar.png");
+	this->BossHp.setTexture(this->BossHpTex);
+	this->BossHp.setScale(0.7f, 0.7f);
 }
 
 int Game::Block_ran()
@@ -295,6 +298,8 @@ void Game::createBlock()
 					level = 2;
 					x = 100; 
 					y = 212;
+					this->fire_above->setPosition(50.f, -100.f);
+					this->fire_above->speedIncrease = 2;
 					this->timeLoadMap.restart();
 					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
@@ -309,6 +314,8 @@ void Game::createBlock()
 					level = 3;
 					x = 100;
 					y = 212;
+					this->fire_above->setPosition(50.f, -100.f);
+					this->fire_above->speedIncrease = 3;
 					this->timeLoadMap.restart();
 					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
@@ -324,6 +331,8 @@ void Game::createBlock()
 					x = 100;
 					y = 950;
 					this->timeLoadMap.restart();
+					this->timeFireball.restart();
+					this->fire_above->speedIncrease = 0;
 					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
 			}
@@ -559,6 +568,37 @@ void Game::enemy_view()
 	//}
 }
 
+void Game::enemy_walk()
+{
+	for (int i = 0; i < this->orc_enemies.size(); ++i)
+	{
+		for (int j = 0; j < this->dirtBlocks.size(); ++j)
+		{
+			if (this->orc_enemies[i]->getGlobalBounds_next_orc().intersects(this->dirtBlocks[j]->getGlobalBounds()))
+			{
+				this->orc_enemies[i]->check_blocknext = false;
+			}
+			if (this->orc_enemies[i]->getGlobalBounds_below_orc().intersects(this->dirtBlocks[j]->getGlobalBounds()))
+			{
+
+				this->orc_enemies[i]->check_gravity = false;
+			}
+		}
+		for (int j = 0; j < this->stoneBlocks.size(); ++j)
+		{
+			if (this->orc_enemies[i]->getGlobalBounds_next_orc().intersects(this->stoneBlocks[j]->getGlobalBounds()))
+			{
+				this->orc_enemies[i]->check_blocknext = false;
+			}
+			if (this->orc_enemies[i]->getGlobalBounds_below_orc().intersects(this->stoneBlocks[j]->getGlobalBounds()))
+			{
+				this->orc_enemies[i]->check_gravity = false;
+			}
+		}
+		
+	}
+}
+
 
 void Game::update_enemy()
 {
@@ -575,9 +615,13 @@ void Game::update_enemy()
 		if (change_level == true && this->orc_enemies[i]->getPosition().y >= 700.f)
 		{
 			this->orc_enemies[i]->setPosition(-200.f, 500.f);
+			orc_enemies[i]->check_view = false;
+			orc_enemies[i]->check_gravity = false;
+			orc_enemies[i]->check_blocknext = false;
+			orc_enemies[i]->check_move = false;
 
 		}
-		if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_orc()))
+		if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_next_orc()))
 		{
 			if (this->delayEnemyAttack >= 1.5f)
 			{
@@ -618,9 +662,13 @@ void Game::update_enemy()
 			{
 				this->orc_enemies[i]->setPosition(-200.f, this->player->getPosition().y + 1500.f);
 				orc_enemies[i]->check_view = false;
+				orc_enemies[i]->check_gravity = false;
+				orc_enemies[i]->check_blocknext = false;
+				orc_enemies[i]->check_move = false;
 			}
 
 		}
+
 		orc_enemies[i]->update_orc();
 	}
 }
@@ -965,6 +1013,7 @@ void Game::updateGUI()
 		this->healthText.setPosition(sf::Vector2f(35.f, 250.f));
 		this->health_s.setPosition(sf::Vector2f(0.f, 250.f));
 
+		this->BossHp.setPosition(sf::Vector2f(60.f, 345.f));
 		this->bossHpBar.setPosition(sf::Vector2f(80.f, 350.f));
 	}
 	else
@@ -985,11 +1034,12 @@ void Game::updateGUI()
 void Game::boss_attack()
 {
 	//spawnTimer += 20.f;
+
 	this->delayFireball = this->timeFireball.getElapsedTime().asSeconds();
-	if (this->delayFireball>=3 && this->level ==4 && this->player->getPosition().y ==1056.f)
+	if (this->delayFireball>=1 && this->level==4)
 	{
 		fireballX = rand() % 450 + 100.f;
-		this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 500.f));
+		this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 1000.f));
 		//this->firebeams.push_back(new fireBeam(500.f, this->player->getPosition().y - 400.f));
 		//spawnTimer = 0.f;
 		this->timeFireball.restart();
@@ -1189,6 +1239,7 @@ void Game::update()
 			this->player->resetAnimationTimer();
 		}
 	}
+	this->enemy_walk();
 	this->loadMap();
 
 	this->updateGUI();
@@ -1236,9 +1287,11 @@ void Game::renderGUI()
 	this->window->draw(health_s);
 	this->window->draw(scoreText);
 	this->window->draw(healthText);
+	
 	if (level == 4 && this->player->getPosition().y>=880)
 	{
 		this->window->draw(bossHpBar);
+		this->window->draw(BossHp);
 	}
 
 
@@ -1273,7 +1326,11 @@ void Game::renderPlayer()
 		{
 			firebeam->render(*this->window);
 		}
-	this->fire_above->render(*this->window);
+		if (this->level != 4)
+		{
+			this->fire_above->render(*this->window);
+		}
+
 	this->boss->render_boss(*this->window);
 	this->player->render(*this->window);
 
@@ -1313,7 +1370,7 @@ void Game::render()
 	this->view.setSize(650.f,950.f);
 	if (level == 4)
 	{
-		this->view.setCenter(650.f / 2, this->player->getPosition().y-280.f);
+		this->view.setCenter(650.f / 2, this->player->getPosition().y-300.f);
 	}
 	else
 	{

@@ -29,7 +29,11 @@ private:
 	void initSprite();
 	void initAnimation();
 	void initPhysics();
+	void gravity();
+	float orcMoveY = 2.f;
 public:
+	bool check_gravity = true;
+	bool check_blocknext=true;
 	bool check_view=false;
 	int check_move = 0;
 	Orc(float pos_x,float pos_y);
@@ -37,6 +41,8 @@ public:
 	//void spawn_orc();
 	void setPosition(const float x, const float y);
 	sf::RectangleShape hitbox_orc;
+	sf::RectangleShape blocknext_orc;
+	sf::RectangleShape blockbelow_orc;
 	sf::RectangleShape viewbox_orc;
 	//sf::CircleShape circ;
 	void hitbox_O();
@@ -52,6 +58,8 @@ public:
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds_orc() const;
 	const sf::FloatRect getGlobalBounds_hit_orc() const;
+	const sf::FloatRect getGlobalBounds_next_orc() const;
+	const sf::FloatRect getGlobalBounds_below_orc() const;
 
 	//void setPosition(const sf::Vector2f pos);
 	//void setPosition(const float x, const float y);

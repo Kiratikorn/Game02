@@ -60,6 +60,8 @@ private:
 	sf::Texture healthTex;
 	sf::Texture worldBackgroundTex;
 	sf::Texture op_BackgroundTex;
+	sf::Texture BossHpTex;
+	sf::Sprite BossHp;
 	sf::Sprite op_Background;
 	sf::Sprite blockOne;
 	sf::Sprite blockTwo;
@@ -114,6 +116,7 @@ public:
 	void createBlock();
 	void updateBlock();
 	void enemy_view();
+	void enemy_walk();
 
 	void update_enemy();
 	void update_block();

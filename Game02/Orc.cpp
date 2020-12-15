@@ -44,6 +44,7 @@ void Orc::initSprite()
 	this->orc.setTextureRect(this->currentFrame);
 	//this->orc.setPosition(300.f, 600.f);
 	this->orc.setScale(1.0f, 1.0f);
+
 }
 
 void Orc::initAnimation()
@@ -57,9 +58,22 @@ void Orc::initPhysics()
 	this->velocityMax = 6.f;
 	this->velocityMin = 1.f;
 	this->acceleration = 3.f;
-	this->drag = 0.94f;
-	this->gravity_orc = 0.f;
+	//this->drag = 0.94f;
+	this->gravity_orc = 1.f;
 	this->velocityMaxY = 15.f;
+}
+
+void Orc::gravity()
+{
+	if (this->check_gravity == true)
+	{
+		this->orcMoveY = 2.f;
+	}
+	else
+	{
+		this->orcMoveY = 0.f;
+	}
+
 }
 
 //void Orc::initPlayer()
@@ -77,6 +91,13 @@ void Orc::hitbox_O()
 	hitbox_orc.setOutlineThickness(2.0f);
 	hitbox_orc.setSize(sf::Vector2f(40.f, 50.f));
 	hitbox_orc.setPosition(this->orc.getPosition().x + 13.f, this->orc.getPosition().y);
+
+	this->blocknext_orc.setSize(sf::Vector2f(30.f, 40.f));
+	this->blocknext_orc.setPosition(this->orc.getPosition().x+20.f, this->orc.getPosition().y+15.f) ;
+
+	this->blockbelow_orc.setFillColor(sf::Color::Red);
+	this->blockbelow_orc.setSize(sf::Vector2f(30.f, 20.f));
+	this->blockbelow_orc.setPosition(this->orc.getPosition().x , this->orc.getPosition().y +50.f);
 
 	//circ.setFillColor(sf::Color::Red);
 	//circ.setRadius(2.f);
@@ -109,6 +130,16 @@ const sf::FloatRect Orc::getGlobalBounds_hit_orc() const
 	return this->viewbox_orc.getGlobalBounds();
 }
 
+const sf::FloatRect Orc::getGlobalBounds_next_orc() const
+{
+	return this->blocknext_orc.getGlobalBounds();
+}
+
+const sf::FloatRect Orc::getGlobalBounds_below_orc() const
+{
+	return this->blockbelow_orc.getGlobalBounds();
+}
+
 //void Player::setPosition(const sf::Vector2f pos)
 //{
 //	this->sprite.setPosition(pos);
@@ -126,7 +157,7 @@ const sf::FloatRect Orc::getGlobalBounds_hit_orc() const
 
 void Orc::resetVelocityY_orc()
 {
-	this->velocity.y = 0.f;
+	this->velocity.y = 2.f;
 }
 
 //void Player::collide(float xvel, float yvel, Platform level[5])
@@ -171,7 +202,7 @@ void Orc::updatePhysics_orc()
 		this->velocity.y = this->velocityMaxY * ((this->velocity.y < 0.f) ? -1.f : 1.f);
 	}
 	//deceleration
-	this->velocity *= this->drag;
+	//this->velocity *= this->drag;
 
 	//limitdece
 	if (std::abs(this->velocity.x) < this->velocityMin)
@@ -190,24 +221,25 @@ void Orc::updateMovement_orc()
 	{
 		this->animState = orc_ANIMATION_STATES::ATTACK_orc;
 	}
-	else if (this->check_view==true)
+	else if (this->check_view==true && check_blocknext==true)
 	{
 		if (this->check_move == 1)
 		{
-			orc.move(-1.5f, 0.f);
+			orc.move(-1.5f, orcMoveY);
 			this->animState = orc_ANIMATION_STATES::MOVING_LEFT_orc;
 		}
 		else if (this->check_move == 2)
 		{
-			orc.move(1.5f, 0.f);
+			orc.move(1.5f, orcMoveY);
 			this->animState = orc_ANIMATION_STATES::MOVING_RIGHT_orc;
 		}
 	}
 
 	else
 	{
-		orc.move(0.0f, 0.f);
+		orc.move(0.f, orcMoveY);
 	}
+
 }
 
 
@@ -240,6 +272,11 @@ void Orc::updateAnimations_orc()
 		}
 		this->orc.setScale(1.f, 1.f);
 		this->orc.setOrigin(0.f, 0.f);
+		this->blocknext_orc.setScale(1.f, 1.f);
+		this->blocknext_orc.setOrigin(0.f, 0.f);
+
+		this->blockbelow_orc.setScale(1.f, 1.f);
+		this->blockbelow_orc.setOrigin(0.f, 0.f);
 	}
 	else if (this->animState == orc_ANIMATION_STATES::MOVING_RIGHT_orc)
 	{
@@ -254,6 +291,11 @@ void Orc::updateAnimations_orc()
 		}
 		this->orc.setScale(-1.f, 1.f);
 		this->orc.setOrigin(this->orc.getGlobalBounds().width / 3.f, 0.f);
+		this->blocknext_orc.setScale(-1.f, 1.f);
+		this->blocknext_orc.setOrigin(this->blocknext_orc.getGlobalBounds().width / 3.f -10.f, 0.f);
+
+		this->blockbelow_orc.setScale(-1.f, 1.f);
+		this->blockbelow_orc.setOrigin(this->blockbelow_orc.getGlobalBounds().width / 3.f, 0.f);
 
 	}
 	else if (this->animState == orc_ANIMATION_STATES::ATTACK_orc)
@@ -286,9 +328,10 @@ void Orc::updateAnimations_orc()
 
 void Orc::update_orc()
 {
+	this->gravity();
 	this->updateMovement_orc();
 	this->updateAnimations_orc();
-	//this->updatePhysics_orc();
+	this->updatePhysics_orc();
 	this->hitbox_O();
 }
 
@@ -296,6 +339,8 @@ void Orc::render_orc(sf::RenderTarget& target)
 {
 	//target.draw(this->hitbox_player);
 	//target.draw(this->viewbox_orc);
+	//target.draw(this->blockbelow_orc);
+	target.draw(this->blocknext_orc);
 	target.draw(this->orc);
 	//target.draw(circ);
 }
