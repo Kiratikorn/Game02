@@ -6,35 +6,34 @@ class Boss
 {
 private:
 	sf::Sprite boss;
+	sf::RectangleShape hit_boxBoss;
 	sf::Texture bossTex;
 	sf::Clock animationTimer;
 
 	short animState;
 	sf::IntRect currentFrame;
 	bool animationSwitch;
-
+	
 	//physics
 	void initVariables();
 	void initTexture();
 	void initSprite();
 	void initAnimation();
 
-	bool idle_anim = false;
-	bool sleep_anim = true;
-	bool opening1 = false;
-	bool opening2 = false;
-	bool opening3 = false;
-	bool fly_animation = false;
 
 public:
 	Boss();
-	virtual ~Boss();
 
+	virtual ~Boss();
+	int animation_boss=0;
+	bool bossFight = false;
 
 	//Accessors
 	const bool& getAnimSwitch_boss();
+	void setPosition(const float x, const float y);
 	const sf::Vector2f getPosition_boss() const;
 	const sf::FloatRect getGlobalBounds_boss() const;
+	const sf::FloatRect getGlobalBounds_hit_box_boss() const;
 
 	//Func
 	void resetAnimationTimer_boss();

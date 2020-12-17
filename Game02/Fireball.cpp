@@ -7,7 +7,9 @@ void Fireball::initTexture()
 
 void Fireball::initSprite()
 {
-	this->fireball_s.setTexture(this->fireballTex);
+	this->fireballShape.setRadius(40);
+	this->fireballShape.setTexture(&this->fireballTex);
+	//this->fireball_s.setTexture(this->fireballTex);
 	this->fireball_s.setScale(0.1f, 0.1f);
 }
 
@@ -27,37 +29,39 @@ Fireball::~Fireball()
 
 void Fireball::setPosition(const float x, const float y)
 {
-	this->fireball_s.setPosition(x, y);
+	this->fireballShape.setPosition(x, y);
 }
 
 const sf::Vector2f Fireball::getPosition() const
 {
-	return this->fireball_s.getPosition();
+	return this->fireballShape.getPosition();
 }
 
 const sf::FloatRect Fireball::getGlobalBounds() const
 {
-	return this->fireball_s.getGlobalBounds();;
+	return this->fireballShape.getGlobalBounds();;
 }
 
 void Fireball::updateMovement_fireball()
 {
 
 	y += 4.f;
-	fireball_s.setPosition(this->fireball_s.getPosition().x, y);
-	fireball_s.setOrigin(this->fireball_s.getLocalBounds().width / 2.f, this->fireball_s.getLocalBounds().width / 2.f);
-	fireball_s.rotate(10.f);
+	fireballShape.setPosition(this->fireball_s.getPosition().x, y);
+	fireballShape.setOrigin(this->fireballShape.getLocalBounds().width / 2.f, this->fireballShape.getLocalBounds().width / 2.f);
+	fireballShape.rotate(10.f);
 
 
 }
 
 void Fireball::update_fireball()
 {
-	this->updateMovement_fireball();
+	if (remove == true)
+		this->updateMovement_fireball();
 }
 
 void Fireball::render(sf::RenderTarget& target)
 {
-	target.draw(this->fireball_s);
+	if(remove==true)
+		target.draw(this->fireballShape);
 
 }

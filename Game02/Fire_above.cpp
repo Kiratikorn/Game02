@@ -37,6 +37,11 @@ Fire_above::~Fire_above()
 {
 }
 
+const sf::FloatRect Fire_above::getGlobalBounds() const
+{
+	return this->fire_above_S.getGlobalBounds();
+}
+
 void Fire_above::setPosition(const float x, const float y)
 {
 	this->fire_above_S.setPosition(x, y);
@@ -115,13 +120,17 @@ void Fire_above::resetAnimationTimer_FA()
 
 void Fire_above::update_FA()
 {
-	this->updateAnimation_FA();
-	this->updateMovement_FA();
+	if (startfire == true && fire_above_play == true)
+	{
+		this->updateAnimation_FA();
+		this->updateMovement_FA();
+	}
+;
 }
 
 void Fire_above::render(sf::RenderTarget& target)
 {
-	if (startfire == true)
+	if (startfire == true && fire_above_play == true)
 	{
 		target.draw(this->fire_above_S);
 	}

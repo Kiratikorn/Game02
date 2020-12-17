@@ -24,6 +24,7 @@ public:
 	int opRestart = 0;
 	bool fire_above_play = false;
 	int speedIncrease=1;
+	const sf::FloatRect getGlobalBounds() const;
 	void setPosition(const float x, const float y);
 	void updateMovement_FA();
 	const bool& getAnimSwitch_FA();

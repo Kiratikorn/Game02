@@ -1,6 +1,8 @@
-#pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
+#include "Opening.h"
 #include "Player.h"
 
 #include "Mainmenu.h"
@@ -22,6 +24,10 @@
 #include <iostream>
 #include<string>
 #include<sstream>
+#include<utility>
+#include<algorithm>
+#include<vector>
+
 //#include "TileMap.h"
 //#include "Map.h"
 
@@ -29,21 +35,37 @@ using namespace std;
 class Game
 {
 private:
+	FILE* fp;
+	bool stopName = false;
+	char temp[255];
+	int scorep[6];
+	string name[6];
+	vector<pair<int, string>>userScore;
+	bool endgames = false;
+
+	float bossHplose = 500.f;
+	void showhighscore(int x, int y, string word, sf::RenderWindow& window, sf::Font* font);
 	int x = 100, y = 500;
 	int column, row = 0,spawn;
+	int sudoX;
 	int health=5;
 	int score=0;
 	int firecheck=0;
 	int level = 1;
+	int boss_skill=0;
 	float worldY=0;
 	int fireballX;
 	int difficulty;
+	int delaySkill;
 	int delayLoadMap;
 	int delayFireball;
 	bool change_level=false;
-	bool bossskill=false;
+	int bossStart = 0;
+
 	bool play = false;
 	bool enterName = false;
+	int gameState = 0;
+	
 
 	//mouse
 	sf::Vector2i mousePosWindow;
@@ -54,7 +76,7 @@ private:
 	sf::Clock timedifficulty;
 	sf::Clock timeLoadMap;
 	sf::Clock timeFireball;
-
+	sf::Clock timeSkill;
 
 	float delayEnemyAttack;
 	float delayfire;
@@ -62,6 +84,9 @@ private:
 	sf::RenderWindow* window;
 	sf::Event ev;
 	sf::View view;
+
+	sf::Music musicBG;
+	sf::Sound BG_sound;
 	//World
 	sf::Texture one;
 	sf::Texture two;
@@ -84,6 +109,7 @@ private:
 	sf::Text scoreText;
 
 	Mainmenu* menu;
+	Opening* opening;
 	Player* player;
 	
 	std::vector<Point*> coins;
@@ -112,8 +138,8 @@ private:
 	void loadMap();
 	int BlockX = 100, BlockY = 400;
 
-	float spawnTimer=0;
-	float spawnTimerMax;
+	int spawnTimer=0;
+	int spawnTimerMax=500;
 
 public:
 	Game();
@@ -132,6 +158,8 @@ public:
 	void enemy_view();
 	void enemy_walk();
 
+	void update_boss();
+	void update_fireabove();
 	void update_enemy();
 	void update_block();
 	void update_dirtBlock();
@@ -157,6 +185,7 @@ public:
 	void collide();
 	//float level[100];
 	//Platform level[100];
+	void updateOp();
 	void updatePlayer();
 	void updateWorld();
 	void updateCollision();
@@ -164,6 +193,7 @@ public:
 	void MenuGUI();
 	
 	void update();
+	void renderOp();
 	void renderBlock();
 	void renderGUI();
 	void renderPlayer();

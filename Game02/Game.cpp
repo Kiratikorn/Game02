@@ -9,6 +9,7 @@ void Game::playgame()
 		this->menu->playMenu = false;
 		this->player->player_play = true;
 		this->fire_above->fire_above_play = true;
+		this->opening->start_op = true;
 	}
 }
 
@@ -17,6 +18,8 @@ void Game::initWindow()
 	this->window = new sf::RenderWindow(sf::VideoMode(650, 800), "Tower Escape", sf::Style::Close | sf::Style::Titlebar);
 	this->window->setFramerateLimit(60);
 	this->menu = new Mainmenu(this->window->getSize().x, window->getSize().y);
+	this->musicBG.openFromFile("Music/bgMusic.wav");
+	this->musicBG.setVolume(20);
 }
 
 void Game::initWorld()
@@ -38,13 +41,16 @@ void Game::initPlayer()
 	this->player->setPosition(280.f, 400.f);
 	//this->orc_enemy = new Orc(20.f,20.f);
 	//this->firebeam = new fireBeam(450.f, this->player->getPosition().y - 200.f);
-	this->fire_above = new Fire_above();
-	this->boss = new Boss();
+	
+	
 }
 
 void Game::initEnemy()
 {
-	
+
+	this->opening = new Opening();
+	this->boss = new Boss();
+	this->fire_above = new Fire_above();
 	//this->spawnTimerMax=1000.f;
 	//this->spawnTimer = this->spawnTimerMax;
 }
@@ -117,6 +123,200 @@ Game::~Game()
 	//{
 	//	delete i;
 	//}
+}
+
+void Game::run()
+{
+	Textbox playernametextbox(50, sf::Color::White, true);
+	playernametextbox.setFont(this->font);
+	playernametextbox.setPosition({ 200.f,320.f });
+	playernametextbox.setlimit(true, 10);
+
+
+
+	this->fp = fopen("./scores.txt", "r");
+	for (int i = 0; i < 5; i++) {
+		fscanf(fp, "%s", &temp);
+		name[i] = temp;
+		fscanf(fp, "%d", &scorep[i]);
+		userScore.push_back(make_pair(scorep[i], name[i]));
+	}
+	this->musicBG.play();
+;
+	while (window->isOpen()) {
+		this->musicBG.setLoop(true);
+	
+		while (this->window->pollEvent(this->ev))
+		{
+
+			switch (ev.type)
+			{
+			case sf::Event::Closed:
+				window->close();
+
+			
+			case sf::Event::TextEntered:
+				if (gameState == 1) {
+					playernametextbox.typeOn(ev);
+				}
+
+			default:
+				break;
+			}
+			if( sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+				window->close();
+			if (this->ev.type == sf::Event::KeyReleased &&
+				(this->ev.key.code == sf::Keyboard::A ||
+					this->ev.key.code == sf::Keyboard::D ||
+					this->ev.key.code == sf::Keyboard::W ||
+					this->ev.key.code == sf::Keyboard::S
+					)
+				)
+			{
+				this->player->resetAnimationTimer();
+			}
+		}
+		window->clear();
+
+		
+		if (gameState == 0)
+		{
+			this->update();
+			this->render();
+			this->menu->playMenu = 1;
+			if (this->menu->getBounds_1().contains(this->mousePosview))
+			{
+				//if (canswitch) {
+				//	this->switcs.play();
+				//	canswitch = false;
+				//}
+				this->menu->buttoncheck(1);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					//this->clicks.play();
+					this->gameState = 1;
+
+				}
+
+			}
+			else if (this->menu->getBounds_2().contains(this->mousePosview))
+
+			{
+				//if (canswitch) {
+				//	this->switcs.play();
+				//	canswitch = false;
+				//}
+				this->menu->buttoncheck(2);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					//this->clicks.play();
+					this->window->close();
+				}
+			}
+			else if (this->menu->getBounds_0().contains(this->mousePosview))
+
+			{
+				//if (canswitch) {
+				//	this->switcs.play();
+				//	canswitch = false;
+				//}
+				this->menu->buttoncheck(2);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					//this->clicks.play();
+					gameState = 2;
+				}
+			}
+		}
+
+
+		//if (enterName == true)
+		//{
+		//	
+		//}
+		else if (gameState == 1)
+		{
+			
+			this->update();
+			this->render();
+			if (this->stopName == false)
+			{
+				playernametextbox.drawTo(*this->window);
+			}
+			
+			
+			
+			enterName = true;
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && enterName) {
+				play = true;
+				this->menu->playMenu = 0;
+				stopName = true;
+				//enter = false;
+				//gamestate = 1;
+				name[5] = playernametextbox.gettext();
+
+			}
+			if (health <= 0) {
+				gameState = 3;
+			}
+		}
+		
+		else if (gameState == 2)
+		{
+			this->menu->playMenu = 2;
+			this->menu->render_Menu(*this->window);
+			//highscorena eiei
+			for (int i = 135; i <= 475; i += 85) {
+				showhighscore(450, i, to_string(userScore[(i - 135) / 85].first), *this->window, &font);
+				showhighscore(100, i, userScore[(i - 135) / 85].second, *this->window, &font);
+			}
+
+		}
+		else if (gameState == 3)
+		{
+			std::stringstream your_score;
+			this->menu->playMenu = 3;
+			this->menu->render_Menu(*this->window);
+			
+			
+			//printf("stage 3");
+			your_score <<"YOUR SCORE: "<< this->score;
+			//std::cout << "YOUR SCORE:" << this->score;
+			
+			this->menu->scoreText.setString(your_score.str());
+			
+		
+		}
+
+		else if (gameState ==4)
+		{
+		printf("stage 4");
+			if (endgames == false) {
+				this->fp = fopen("./scores.txt", "r");
+				scorep[5] = score;
+				userScore.push_back(make_pair(scorep[5], name[5]));
+				sort(userScore.begin(), userScore.end());
+				fclose(fp);
+				fopen("./scores.txt", "w");
+				for (int i = 5; i >= 1; i--) {
+					strcpy(temp, userScore[i].second.c_str());
+					fprintf(fp, "%s %d\n", temp, userScore[i].first);
+				}
+				fclose(fp);
+				endgames = true;
+			}
+		}
+		window->display();
+	}
+}
+
+void Game::showhighscore(int x, int y, string word, sf::RenderWindow& window, sf::Font* font)
+{
+	sf::Text text;
+	text.setFont(*font);
+	text.setPosition(x, y);
+	text.setString(word);
+	text.setCharacterSize(100);
+	text.setOutlineThickness(2.f);
+	text.setOutlineColor(sf::Color::Black);
+	window.draw(text);
 }
 
 void Game::updateMousePositions()
@@ -588,35 +788,84 @@ void Game::enemy_view()
 
 void Game::enemy_walk()
 {
+
 	for (int i = 0; i < this->orc_enemies.size(); ++i)
 	{
 		for (int j = 0; j < this->dirtBlocks.size(); ++j)
 		{
+
+			//dirt
 			if (this->orc_enemies[i]->getGlobalBounds_next_orc().intersects(this->dirtBlocks[j]->getGlobalBounds()))
 			{
 				this->orc_enemies[i]->check_blocknext = false;
 			}
+			else
+			{
+				//this->orc_enemies[i]->check_blocknext = true;
+			}
+			
 			if (this->orc_enemies[i]->getGlobalBounds_below_orc().intersects(this->dirtBlocks[j]->getGlobalBounds()))
 			{
 
 				this->orc_enemies[i]->check_gravity = false;
 			}
+			else
+			{
+				//this->orc_enemies[i]->check_gravity = true;
+			}
+			
+			
 		}
+
+		//stone
 		for (int j = 0; j < this->stoneBlocks.size(); ++j)
 		{
 			if (this->orc_enemies[i]->getGlobalBounds_next_orc().intersects(this->stoneBlocks[j]->getGlobalBounds()))
 			{
 				this->orc_enemies[i]->check_blocknext = false;
 			}
+			else
+			{
+				//this->orc_enemies[i]->check_blocknext = true;
+			}
 			if (this->orc_enemies[i]->getGlobalBounds_below_orc().intersects(this->stoneBlocks[j]->getGlobalBounds()))
 			{
 				this->orc_enemies[i]->check_gravity = false;
+			}
+			else
+			{
+				//this->orc_enemies[i]->check_gravity = true;
 			}
 		}
 		
 	}
 }
 
+
+void Game::update_boss()
+{
+	if (this->level == 4)
+	{
+		this->boss->bossFight = true;
+	}
+	if (this->player->getGlobalBounds_attack().intersects(this->boss->getGlobalBounds_hit_box_boss()) && this->player->attack == true)
+	{
+		this->bossHplose-=5;
+	}
+	
+}
+
+void Game::update_fireabove()
+{
+	if (level == 4)
+	{
+		this->fire_above->fire_above_play = false;
+	}
+	if (this->fire_above->getGlobalBounds().intersects(this->player->getGlobalBounds_hit()))
+	{
+		this->health = 0;
+	}
+}
 
 void Game::update_enemy()
 {
@@ -671,7 +920,8 @@ void Game::update_enemy()
 		{
 			if (this->level == 1 || this->level == 2 || this->level == 3)
 			{
-				this->orc_enemies.erase(this->orc_enemies.begin() + i);
+				this->orc_enemies[i]->remove_orc = true;
+				//this->orc_enemies.erase(this->orc_enemies.begin() + i);
 			}
 		}
 		else if (this->player->getPosition().y - 800.f >= this->orc_enemies[i]->getPosition().y)
@@ -994,15 +1244,20 @@ void Game::update_fireball()
 	{
 		if (this->player->getGlobalBounds_hit().intersects(this->fireballs[i]->getGlobalBounds()))
 		{
+			
+			this->fireballs[i]->remove = false; //this->fireballs.erase(this->fireballs.begin() + i);
 			this->health--;
-			this->fireballs[i]->setPosition(-100.f, this->player->getPosition().y - 200.f);
 		}
-		if (this->player->getPosition().y+ 500.f <= this->fireballs[i]->getPosition().y )
+			
+		if (this->player->getPosition().y + 200.f <= this->fireballs[i]->getPosition().y)
 		{
-
-			this->fireballs.erase(this->fireballs.begin() + i);
-
+			this->fireballs[i]->remove = false;
 		}
+
+
+
+
+		
 		fireballs[i]->update_fireball();
 	}
 }
@@ -1011,7 +1266,7 @@ void Game::update_firebeam()
 {
 	for (int i = 0; i < this->firebeams.size(); ++i)
 	{
-		this->firebeams[i]->skill = rand() % 2;
+		//this->firebeams[i]->skill = rand() % 2;
 		this->firebeams[i]->update_firebeam();
 	}
 }
@@ -1024,15 +1279,15 @@ void Game::updateGUI()
 	scoreNum << "Score :" << score;
 	healthNum << " x " << health;
 	this->healthText.setString(healthNum.str());
-	this->bossHpBar.setSize(sf::Vector2f(500.f, this->bossHpBar.getSize().y));
+	this->bossHpBar.setSize(sf::Vector2f(bossHplose, this->bossHpBar.getSize().y));
 	if (level == 4 && this->player->getPosition().y >= 400)
 	{
-		this->scoreText.setPosition(sf::Vector2f(480.f,240.f));
-		this->healthText.setPosition(sf::Vector2f(35.f, 250.f));
-		this->health_s.setPosition(sf::Vector2f(0.f, 250.f));
+		this->scoreText.setPosition(sf::Vector2f(480.f, this->player->getPosition().y - 550.f));
+		this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 550.f));
+		this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 550.f));
 
 		this->BossHp.setPosition(sf::Vector2f(60.f, 345.f));
-		this->bossHpBar.setPosition(sf::Vector2f(80.f, 350.f));
+		this->bossHpBar.setPosition(sf::Vector2f(85.f, 350.f));
 	}
 	else
 	{
@@ -1052,26 +1307,50 @@ void Game::updateGUI()
 void Game::boss_attack()
 {
 	//spawnTimer += 20.f;
-
+	sudoX = this->player->getPosition().x;
+	this->delaySkill=this->timeSkill.getElapsedTime().asSeconds();
 	this->delayFireball = this->timeFireball.getElapsedTime().asSeconds();
-	if (this->delayFireball>=1 && this->level==4)
+	
+	if (this->bossStart==1)
 	{
-		fireballX = rand() % 450 + 100.f;
-		this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 1000.f));
-		//this->firebeams.push_back(new fireBeam(500.f, this->player->getPosition().y - 400.f));
-		//spawnTimer = 0.f;
-		this->timeFireball.restart();
+		this->boss->setPosition(380.f,900.f);
+		this->boss->animation_boss = 0;
+		
+		bossStart = 2;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::K))
+	else if (level == 4 && this->bossStart ==0)
 	{
-		bossskill = true;
+		this->bossStart = 1;
+		this->timeSkill.restart();
 	}
-	if (bossskill == true)
+	if (this->delaySkill >= rand()%10 +10.f  && bossStart == 2)
 	{
+		boss_skill = sudoX %2+1 ;
+		this->timeSkill.restart();
+	}
+	printf("[%d]", boss_skill);
+	if (boss_skill == 2)
+	{
+		if (this->delayFireball >= 1)
+		{
+			fireballX = rand() % 450 + 100.f;
+			this->fireballs.push_back(new Fireball(fireballX, this->player->getPosition().y - 1000.f));
+			this->timeFireball.restart();
+		}
 
 	}
-	
+	else if (boss_skill == 1)
+	{
+		if (this->delayFireball >= 4)
+		{
+			this->firebeams.push_back(new fireBeam(550.f, this->player->getPosition().y - 400.f));
+			this->timeFireball.restart();
+		}
+	}
 }
+
+
+
 
 void Game::player_attack()
 {
@@ -1165,35 +1444,8 @@ void Game::updateCollision()
 
 void Game::MenuGUI()
 {
-	Textbox playernametextbox(100, sf::Color::White, true);
-	playernametextbox.setFont(this->font);
-	playernametextbox.setPosition({ 500.f,320.f });
-	playernametextbox.setlimit(true, 10);
 	this->menu->render_Menu(*this->window);
-	if (this->menu->getBounds_1().contains(this->mousePosview)) 
-	{
-		//if (canswitch) {
-		//	this->switcs.play();
-		//	canswitch = false;
-		//}
-		this->menu->buttoncheck(1);
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			//this->clicks.play();
-			this->play = true;
-		}
-	}
-	if (this->menu->getBounds_2().contains(this->mousePosview))
-	{
-		//if (canswitch) {
-		//	this->switcs.play();
-		//	canswitch = false;
-		//}
-		this->menu->buttoncheck(2);
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			//this->clicks.play();
-			this->window->close();
-		}
-	}
+	
 }
 
 void Game::collide()
@@ -1226,8 +1478,18 @@ void Game::collide()
 	}
 }
 
+void Game::updateOp()
+{
+	this->opening->update();
+}
+
 void Game::updatePlayer()
 {
+
+	if (this->player->test==true)
+	{
+		this->health = 99;
+	}
 	this->fire_above->update_FA();
 	this->boss->update_boss();
 	this->update_coin();
@@ -1260,38 +1522,12 @@ void Game::updateWorld()
 	//}
 }
 
-void Game::run()
-{
-	while (this->window->isOpen());
-	{
-		this->update();
-		this->render();
-	}
-}
+
 
 void Game::update()
 {
-	while (this->window->pollEvent(this->ev))
-	{
 
-		if (this->ev.type == sf::Event::Closed)
-			this->window->close();
-		else if (this->ev.type == sf::Event::KeyPressed && this->ev.key.code == sf::Keyboard::Escape)
-			this->window->close();
-		
 
-		if (this->ev.type == sf::Event::KeyReleased &&
-			(this->ev.key.code == sf::Keyboard::A ||
-				this->ev.key.code == sf::Keyboard::D ||
-				this->ev.key.code == sf::Keyboard::W ||
-				this->ev.key.code == sf::Keyboard::S
-				)
-			)
-		{
-			this->player->resetAnimationTimer();
-		}
-	}
-	printf(",");
 	this->playgame();
 	this->updateMousePositions();
 	
@@ -1306,11 +1542,15 @@ void Game::update()
 	this->update_dirtBlock();
 	this->update_stoneBlock();
 
+	this->update_fireabove();
 	this->update_fire();
 	this->update_firer();
 	this->update_fireball();
 	this->update_firebeam();
 	
+	this->updateOp();
+
+	this->update_boss();
 	this->boss_attack();
 	this->player_attack();
 
@@ -1323,6 +1563,11 @@ void Game::update()
 	this->updateWorld();
 
 	//this->enemy_view();
+}
+
+void Game::renderOp()
+{
+	this->opening->render(*this->window);
 }
 
 void Game::renderBlock()
@@ -1346,17 +1591,17 @@ void Game::renderGUI()
 		this->window->draw(scoreText);
 		this->window->draw(healthText);
 	}
-	
-	
-	if (level == 4 && this->player->getPosition().y>=880)
+
+
+	if (level == 4 && this->player->getPosition().y >= 880)
 	{
 		this->window->draw(bossHpBar);
 		this->window->draw(BossHp);
 	}
 
 
-	
 }
+
 
 void Game::renderPlayer()
 {
@@ -1410,7 +1655,7 @@ void Game::renderWorld()
 void Game::render()
 {
 
-	this->window->clear();
+	
 	//draw world
 
 	this->renderWorld();
@@ -1423,12 +1668,16 @@ void Game::render()
 		this->window->draw(this->op_Background); 
 	}
 
-	this->renderGUI();
-	this->renderPlayer();
 	
+	this->renderPlayer();
+	this->renderOp();
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));
 	this->view.setSize(650.f,950.f);
-	if (level == 4)
+	if (health<=0)
+	{
+		this->view.setCenter(650.f / 2, this->window->getSize().y/2);
+	}
+	else if (level == 4)
 	{
 		this->view.setCenter(650.f / 2, this->player->getPosition().y-300.f);
 	}
@@ -1438,8 +1687,8 @@ void Game::render()
 	}
 	this->window->setView(view);
 	this->MenuGUI();
-
-	this->window->display();
+	this->renderGUI();
+	
 }
 
 const sf::RenderWindow& Game::getWindow() const

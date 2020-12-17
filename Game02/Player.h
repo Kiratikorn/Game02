@@ -47,6 +47,7 @@ public :
 	sf::RectangleShape upbox_player;
 	sf::RectangleShape downbox_player;
 	sf::CircleShape circ;
+	bool test = false;
 	bool attack= false;
 	bool digdown = false;
 	bool digup = false;

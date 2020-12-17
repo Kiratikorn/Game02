@@ -4,6 +4,7 @@ class Fireball
 {
 private:
 	float y;
+	sf::CircleShape fireballShape;
 	sf::Sprite fireball_s;
 	sf::Texture fireballTex;
 	void initTexture();
@@ -11,6 +12,7 @@ private:
 public:
 	Fireball(float pos_x, float pos_y);
 	virtual ~Fireball();
+	bool remove = true;
 	void setPosition(const float x, const float y);
 	const sf::Vector2f getPosition() const;
 	const sf::FloatRect getGlobalBounds() const;

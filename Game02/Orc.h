@@ -72,6 +72,7 @@ public:
 	void updatePhysics_orc();
 	void updateMovement_orc();
 	void updateAnimations_orc();
+	bool remove_orc = false;
 	void update_orc();
 	void render_orc(sf::RenderTarget& target);
 };

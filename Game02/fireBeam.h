@@ -4,16 +4,18 @@ class fireBeam
 {
 	float x1;
 	float x2;
-
+	bool first = true;
 	sf::Sprite firebeam_s1;
 	sf::Sprite firebeam_s2;
 	sf::Texture firebeamTex;
 	sf::IntRect currentFrame;
 	sf::Clock animationTimer;
+	sf::RectangleShape hitbox1;
+	sf::RectangleShape hitbox2;
 	void initTexture();
 	void initSprite();
 public:
-	int skill;
+	int skill=2;
 
 	fireBeam(float pos_x, float pos_y);
 	virtual ~fireBeam();

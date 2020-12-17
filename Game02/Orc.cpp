@@ -92,8 +92,8 @@ void Orc::hitbox_O()
 	hitbox_orc.setSize(sf::Vector2f(40.f, 50.f));
 	hitbox_orc.setPosition(this->orc.getPosition().x + 13.f, this->orc.getPosition().y);
 
-	this->blocknext_orc.setSize(sf::Vector2f(30.f, 40.f));
-	this->blocknext_orc.setPosition(this->orc.getPosition().x+20.f, this->orc.getPosition().y+15.f) ;
+	this->blocknext_orc.setSize(sf::Vector2f(10.f, 20.f));
+	this->blocknext_orc.setPosition(this->orc.getPosition().x-10.f, this->orc.getPosition().y+15.f) ;
 
 	this->blockbelow_orc.setFillColor(sf::Color::Red);
 	this->blockbelow_orc.setSize(sf::Vector2f(30.f, 20.f));
@@ -292,7 +292,7 @@ void Orc::updateAnimations_orc()
 		this->orc.setScale(-1.f, 1.f);
 		this->orc.setOrigin(this->orc.getGlobalBounds().width / 3.f, 0.f);
 		this->blocknext_orc.setScale(-1.f, 1.f);
-		this->blocknext_orc.setOrigin(this->blocknext_orc.getGlobalBounds().width / 3.f -10.f, 0.f);
+		this->blocknext_orc.setOrigin(this->blocknext_orc.getGlobalBounds().width / 3.f+30.f, 0.f);
 
 		this->blockbelow_orc.setScale(-1.f, 1.f);
 		this->blockbelow_orc.setOrigin(this->blockbelow_orc.getGlobalBounds().width / 3.f, 0.f);
@@ -328,11 +328,14 @@ void Orc::updateAnimations_orc()
 
 void Orc::update_orc()
 {
-	this->gravity();
-	this->updateMovement_orc();
-	this->updateAnimations_orc();
-	this->updatePhysics_orc();
-	this->hitbox_O();
+	if (remove_orc == false)
+	{
+		this->gravity();
+		this->updateMovement_orc();
+		this->updateAnimations_orc();
+		this->updatePhysics_orc();
+		this->hitbox_O();
+	}
 }
 
 void Orc::render_orc(sf::RenderTarget& target)
@@ -340,7 +343,11 @@ void Orc::render_orc(sf::RenderTarget& target)
 	//target.draw(this->hitbox_player);
 	//target.draw(this->viewbox_orc);
 	//target.draw(this->blockbelow_orc);
-	target.draw(this->blocknext_orc);
-	target.draw(this->orc);
+	if (remove_orc == false)
+	{
+		target.draw(this->blocknext_orc);
+		target.draw(this->orc);
+	}
+	
 	//target.draw(circ);
 }

@@ -218,6 +218,14 @@ void Player::updatePhysics()
 
 void Player::updateMovement()
 {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T))
+	{
+		test= true;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
+	{
+		test = false;
+	}
 	this->animState = PLAYER_ANIMATION_STATES::IDLE;
 	this->attack = false;
 	this->digdown = false;
@@ -246,7 +254,7 @@ void Player::updateMovement()
 		this->animState = PLAYER_ANIMATION_STATES::MOVING_UP;
 	}
 	
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && player_play == true)
+	else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && player_play == true)|| test == true)
 	{
 		//sprite.move(0.f, 5.f);
 		if (delaydig >=0.f)	//delay 1
@@ -385,10 +393,10 @@ void Player::render(sf::RenderTarget& target)
 	
 	//target.draw(this->attackbox_player);
 	//target.draw(this->upbox_player);
-	target.draw(this->downbox_player);
+	//target.draw(this->downbox_player);
 	//target.draw(this->nextbox_player);
-	target.draw(this->hitbox_player);
-	target.draw(this->nextbox_player);
+	//target.draw(this->hitbox_player);
+	//target.draw(this->nextbox_player);
 	target.draw(this->sprite);
 
 
