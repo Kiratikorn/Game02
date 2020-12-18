@@ -64,6 +64,7 @@ private:
 	int delayLoadMap;
 	int delayFireball;
 	int delayLoseHpFireball;
+	int delayLoseHpfirebeam;
 	int delayShield;
 	int delayItem;
 	bool change_level=false;
@@ -87,6 +88,7 @@ private:
 	sf::Clock timeLoseHpFireball;
 	sf::Clock timeShield;
 	sf::Clock timeItem;
+	sf::Clock timeLoseHpfirebeam;
 
 	float delayEnemyAttack;
 	float delayfire;

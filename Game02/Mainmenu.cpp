@@ -4,12 +4,15 @@ Mainmenu::Mainmenu(float width, float height)
 {
 	this->font.loadFromFile("Font/CRIT RACE.ttf");
 	
+	this->menuScoreTex.loadFromFile("Pic/scorepage.png");
+	this->menuScore.setTexture(this->menuScoreTex);
+	
 	this->scoreText.setFont(this->font);
 	this->scoreText.setCharacterSize(60);
 	this->scoreText.setFillColor(sf::Color::White);
 	this->scoreText.setOutlineColor(sf::Color::Black);
 	this->scoreText.setOutlineThickness(2.f);
-	this->scoreText.setPosition(100.f, 400.f);
+	this->scoreText.setPosition(120.f, 350.f);
 
 	this->NameText.setFont(this->font);
 	this->NameText.setCharacterSize(40);
@@ -19,16 +22,14 @@ Mainmenu::Mainmenu(float width, float height)
 	this->NameText.setString("63010086 Kiratikorn Phlappla");
 	this->NameText.setPosition(80.f, 0.f);
 
-	if (this->playMenu == 1)
-		this->menuTex.loadFromFile("Pic/Menu_display.png");
-	else
-		this->menuTex.loadFromFile("Pic/Highscore.png");
+
+	this->menuTex.loadFromFile("Pic/Menu_display.png");
 	this->menu_s.setTexture(this->menuTex);
 	this->menu_s.setPosition(0.f, 705.f);
 
-	this->highscoreTex.loadFromFile("Pic/Highscore.png");
+	this->highscoreTex.loadFromFile("Pic/highscore_1.png");
 	this->highscore_s.setTexture(this->highscoreTex);
-	this->highscore_s.setScale(1.2f, 1.2f);
+	this->highscore_s.setScale(1.f, 1.f);
 	this->button[0].setSize(sf::Vector2f(70.f, 68.f));
 	this->button[0].setPosition(58.f, 793.f);
 
@@ -108,6 +109,7 @@ void Mainmenu::render_Menu(sf::RenderWindow& target)
 	}
 	if (playMenu == 3)
 	{
+		target.draw(this->menuScore);
 		target.draw(this->scoreText);
 
 		//target.draw(this->highscore_s);

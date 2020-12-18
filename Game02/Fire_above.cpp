@@ -51,19 +51,12 @@ void Fire_above::setPosition(const float x, const float y)
 
 void Fire_above::updateMovement_FA()
 {
-	if (fire_above_play == true)
-	{
-		opRestart = 1;
-	}
-	if (opRestart == 0)
-	{
-		this->timeSpeed.restart();
-	}
-	if (fire_above_play == true && opRestart==1)
+
+	if (fire_above_play == true && opRestart>=1)
 	{
 
 		this->animState = FA_ANIMATION_STATES::IDLE_FA;
-		this->speed = this->timeSpeed.getElapsedTime().asSeconds();
+
 		if (startfire == true)
 		{
 			if (speed > 10 && speedIncrease == 3)
@@ -76,11 +69,7 @@ void Fire_above::updateMovement_FA()
 			}
 			fire_above_S.move(0.f, speed * speedIncrease * 0.1);
 		}
-		else if (this->speed >= 5)
-		{
-			startfire = true;
-			this->timeSpeed.restart();
-		}
+
 
 	}
 }
@@ -120,8 +109,25 @@ void Fire_above::resetAnimationTimer_FA()
 
 void Fire_above::update_FA()
 {
+	this->speed = this->timeSpeed.getElapsedTime().asSeconds();
+	if (fire_above_play == true && opRestart == 0);
+	{
+		opRestart = 1;
+	}
+	if (opRestart == 0)
+	{
+		this->timeSpeed.restart();
+	}
+	else if (this->speed >= 5 && opRestart == 1)
+	{
+		printf("+++++fire+++++++;");
+		startfire = true;
+		//this->timeSpeed.restart();
+		opRestart = 2;
+	}
 	if (startfire == true && fire_above_play == true)
 	{
+		
 		this->updateAnimation_FA();
 		this->updateMovement_FA();
 	}

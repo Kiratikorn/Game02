@@ -345,7 +345,7 @@ void Orc::render_orc(sf::RenderTarget& target)
 	//target.draw(this->blockbelow_orc);
 	if (remove_orc == false)
 	{
-		target.draw(this->blocknext_orc);
+		//target.draw(this->blocknext_orc);
 		target.draw(this->orc);
 	}
 	

@@ -125,20 +125,33 @@ void fireBeam::render(sf::RenderTarget& target)
 	
 	if (this->skill==0 && this->firebeam_s1.getPosition().x >=120.f)
 	{
-
+		
 		target.draw(this->firebeam_s1);
-		target.draw(this->hitbox1);
+		//target.draw(this->hitbox1);
 	}
+	else if (this->skill == 0 && this->firebeam_s1.getPosition().x < 120.f)
+	{
+
+		this->firebeam_s1.setPosition(-200.f, 100.f);
+	}
+		
 
 
 	if (this->skill == 1 && this->firebeam_s1.getPosition().x >= 350.f)
 	{
-
+		
 		target.draw(this->firebeam_s1);
 		target.draw(this->firebeam_s2);
-		target.draw(this->hitbox1);
-		target.draw(this->hitbox2);
+		//target.draw(this->hitbox1);
+		//target.draw(this->hitbox2);
 	}
+	else if (this->skill == 1 && this->firebeam_s1.getPosition().x < 350.f)
+	{
+
+		this->firebeam_s1.setPosition(-200.f, 100.f);
+		this->firebeam_s2.setPosition(1000.f, 100.f);
+	}
+
 
 
 }

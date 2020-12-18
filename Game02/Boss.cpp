@@ -139,7 +139,7 @@ void Boss::render_boss(sf::RenderTarget& target)
 	if (bossFight == true)
 	{
 		printf("boss");
-		target.draw(this->hit_boxBoss);
+		//target.draw(this->hit_boxBoss);
 		target.draw(this->boss);
 	}
 }

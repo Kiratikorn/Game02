@@ -67,13 +67,13 @@ void Game::deleteblock()
 
 void Game::loadMap()
 {
-	if (delayLoadMap <= 5 && level >=2)
+	if (delayLoadMap <= 3 && level >=2)
 	{
 		this->player->setPosition(this->player->getPosition().x, 0.f);
 		this->player->gravity_check = false;
 		this->change_level = true;
 	}
-	else if (delayLoadMap > 5 && level >=2)
+	else if (delayLoadMap > 3 && level >=2)
 	{
 		this->player->gravity_check = true;
 		this->change_level = false;
@@ -568,6 +568,7 @@ void Game::createBlock()
 					y = 950;
 					this->timeLoadMap.restart();
 					this->timeFireball.restart();
+					this->fire_above->setPosition(50.f, -100.f);
 					this->fire_above->speedIncrease = 0;
 					//this->player->setPosition(this->player->getPosition().x, 0.f);
 				}
@@ -735,7 +736,7 @@ void Game::createBlock()
 			else if(this->type ==11 && this->shield->remove_shield ==true && delayItem > 10.f)
 			{
 		
-				this->shield->setPosition_shield(x, y);
+				this->shield->setPosition_shield(x + 20.f, y + 15.f);
 				this->shield->remove_shield = false;
 				itemcount++;
 				this->timeItem.restart();
@@ -743,7 +744,7 @@ void Game::createBlock()
 			else if (this->type == 12 && this->potion->remove_potion == true && delayItem>10.f)
 			{
 
-				this->potion->setPosition_potion(x, y);
+				this->potion->setPosition_potion(x+20.f, y+15.f);
 				this->potion->remove_potion = false;
 				itemcount++;
 				this->timeItem.restart();
@@ -883,13 +884,20 @@ void Game::update_boss()
 	}
 	if (this->player->getGlobalBounds_attack().intersects(this->boss->getGlobalBounds_hit_box_boss()) && this->player->attack == true)
 	{
-		this->bossHplose-=5;
+		this->bossHplose-=10;
 	}
 	
 }
 
 void Game::update_fireabove()
 {
+	this->fire_above->update_FA();
+	
+	if (change_level == true)
+	{
+		this->fire_above->opRestart = 0;
+	}
+
 	if (level == 4)
 	{
 		this->fire_above->fire_above_play = false;
@@ -1302,8 +1310,21 @@ void Game::update_fireball()
 
 void Game::update_firebeam()
 {
+	this->delayLoseHpfirebeam=this->timeLoseHpfirebeam.getElapsedTime().asSeconds();
 	for (int i = 0; i < this->firebeams.size(); ++i)
 	{
+		if (this->player->getGlobalBounds_hit().intersects(this->firebeams[i]->getGlobalBounds1()) && 
+			this->shield->aura_shield==false && this->delayLoseHpfirebeam >1.f)
+		{
+			health--;
+			this->timeLoseHpfirebeam.restart();
+		}
+		else if (this->player->getGlobalBounds_hit().intersects(this->firebeams[i]->getGlobalBounds2()) &&
+			this->shield->aura_shield == false && this->delayLoseHpfirebeam > 1.f)
+		{
+			health--;
+			this->timeLoseHpfirebeam.restart();
+		}
 		//this->firebeams[i]->skill = rand() % 2;
 		this->firebeams[i]->update_firebeam();
 	}
@@ -1579,9 +1600,8 @@ void Game::updatePlayer()
 
 	if (this->player->test==true)
 	{
-		this->health = 99;
+		this->health = 5;
 	}
-	this->fire_above->update_FA();
 	this->boss->update_boss();
 	this->update_coin();
 	this->player->update();
@@ -1733,6 +1753,7 @@ void Game::renderPlayer()
 		}
 		if (this->level != 4)
 		{
+			
 			this->fire_above->render(*this->window);
 		}
 

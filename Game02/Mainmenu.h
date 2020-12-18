@@ -9,6 +9,8 @@ class Mainmenu
 private:
 	int selectedITEMindex;
 	sf::Sprite menu_s;
+	sf::Sprite menuScore;
+	sf::Texture menuScoreTex;
 	sf::Texture menuTex;
 	sf::Sprite highscore_s;
 	sf::Texture highscoreTex;
