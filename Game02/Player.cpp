@@ -222,7 +222,7 @@ void Player::updateMovement()
 	{
 		test= true;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
 	{
 		test = false;
 	}

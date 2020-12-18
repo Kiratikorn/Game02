@@ -17,6 +17,9 @@
 #include "Orc.h"
 #include "Boss.h"
 #include "Point.h"
+//Item
+#include "Potion.h"
+#include "Shield.h"
 //#include "Block.h"
 #include "Block_dirt.h"
 #include "Block_Stone.h"
@@ -49,6 +52,7 @@ private:
 	int column, row = 0,spawn;
 	int sudoX;
 	int health=5;
+	int aura = 0;
 	int score=0;
 	int firecheck=0;
 	int level = 1;
@@ -59,9 +63,12 @@ private:
 	int delaySkill;
 	int delayLoadMap;
 	int delayFireball;
+	int delayLoseHpFireball;
+	int delayShield;
+	int delayItem;
 	bool change_level=false;
 	int bossStart = 0;
-
+	int itemcount = 0;
 	bool play = false;
 	bool enterName = false;
 	int gameState = 0;
@@ -77,6 +84,9 @@ private:
 	sf::Clock timeLoadMap;
 	sf::Clock timeFireball;
 	sf::Clock timeSkill;
+	sf::Clock timeLoseHpFireball;
+	sf::Clock timeShield;
+	sf::Clock timeItem;
 
 	float delayEnemyAttack;
 	float delayfire;
@@ -91,6 +101,7 @@ private:
 	sf::Texture one;
 	sf::Texture two;
 	sf::Texture healthTex;
+	sf::Texture shieldTex;
 	sf::Texture worldBackgroundTex;
 	sf::Texture op_BackgroundTex;
 	sf::Texture BossHpTex;
@@ -99,18 +110,24 @@ private:
 	sf::Sprite blockOne;
 	sf::Sprite blockTwo;
 	sf::Sprite health_s;
+	sf::Sprite shield_s;
 	sf::Sprite worldBackground;
 	sf::RectangleShape blockCheck;
 	sf::RectangleShape check;
 	sf::RectangleShape bossHpBar;
 	
 	sf::Font font;
+	sf::Text auraText;
 	sf::Text healthText;
 	sf::Text scoreText;
 
 	Mainmenu* menu;
 	Opening* opening;
 	Player* player;
+
+	//Item
+	Shield* shield;
+	Potion* potion;
 	
 	std::vector<Point*> coins;
 	std::vector<Orc*> orc_enemies;
@@ -128,9 +145,10 @@ private:
 	bool ran = false;
 
 	//TileMap map;
-	
+
 	void playgame();
 	void initWindow();
+	void initItem();
 	void initWorld();
 	void initPlayer();
 	void initEnemy();
@@ -169,6 +187,7 @@ public:
 	void update_fireball();
 	void update_firebeam();
 	void updateGUI();
+	void update_Item();
 	
 	void boss_attack();
 	void player_attack();
@@ -193,6 +212,7 @@ public:
 	void MenuGUI();
 	
 	void update();
+	void renderItem();
 	void renderOp();
 	void renderBlock();
 	void renderGUI();

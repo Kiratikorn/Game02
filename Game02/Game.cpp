@@ -1,7 +1,6 @@
 #include "Game.h"
 
 
-
 void Game::playgame()
 {
 	if (play == true)
@@ -20,6 +19,12 @@ void Game::initWindow()
 	this->menu = new Mainmenu(this->window->getSize().x, window->getSize().y);
 	this->musicBG.openFromFile("Music/bgMusic.wav");
 	this->musicBG.setVolume(20);
+}
+
+void Game::initItem()
+{
+	this->shield = new Shield();
+	this->potion = new Potion();
 }
 
 void Game::initWorld()
@@ -82,6 +87,7 @@ Game::Game()
 	this->initPlayer();
 	this->initEnemy();
 	this->initGUI();
+	this->initItem();
 }
 
 Game::~Game()
@@ -329,6 +335,12 @@ void Game::initGUI()
 {
 	this->font.loadFromFile("Font/CRIT RACE.ttf");
 
+	this->auraText.setFont(this->font);
+	this->auraText.setCharacterSize(30);
+	this->auraText.setFillColor(sf::Color::White);
+	this->auraText.setOutlineColor(sf::Color::Black);
+	this->auraText.setOutlineThickness(2.f);
+
 	this->healthText.setFont(this->font);
 	this->healthText.setCharacterSize(30);
 	this->healthText.setFillColor(sf::Color::White);
@@ -336,7 +348,10 @@ void Game::initGUI()
 	this->healthText.setOutlineThickness(2.f);
 
 	this->healthTex.loadFromFile("Pic/heart.png");
+	this->shieldTex.loadFromFile("Pic/shieldIcon1.png");
 	this->health_s.setTexture(this->healthTex);
+	this->shield_s.setTexture(this->shieldTex);
+	this->shield_s.setScale(0.7f, 0.7f);
 
 	this->scoreText.setFont(this->font);
 	this->scoreText.setCharacterSize(40);
@@ -354,7 +369,7 @@ void Game::initGUI()
 
 int Game::Block_ran()
 {
-	this->type = rand() % 15;
+	this->type = rand() % 17;
 	return type;
 }
 
@@ -466,6 +481,7 @@ void Game::createBlock()
 {
 	this->difficulty = this->timedifficulty.getElapsedTime().asSeconds();
 	this->delayLoadMap = this->timeLoadMap.getElapsedTime().asSeconds();
+	this->delayItem = this->timeItem.getElapsedTime().asSeconds();
 	//printf("%d\n", delayLoadMap);
 	if (this->player->getPosition().y+600.f>=this->y)
 	{
@@ -514,6 +530,7 @@ void Game::createBlock()
 				{
 					//change_level = true;
 					level = 2;
+					itemcount = 0;
 					x = 100; 
 					y = 212;
 					this->fire_above->setPosition(50.f, -100.f);
@@ -530,6 +547,7 @@ void Game::createBlock()
 				{
 					//change_level = true;
 					level = 3;
+					itemcount = 0;
 					x = 100;
 					y = 212;
 					this->fire_above->setPosition(50.f, -100.f);
@@ -622,6 +640,10 @@ void Game::createBlock()
 			{
 				type = 6;
 			}
+			if ((type == 11 || type ==12) && itemcount > 5)
+			{
+				type = 14;
+			}
 				//if (y >= 5000.f && y<=5700.f)
 			//{
 			//	type = 11;
@@ -710,11 +732,22 @@ void Game::createBlock()
 
 				firecheck++;
 			}
-			else
+			else if(this->type ==11 && this->shield->remove_shield ==true && delayItem > 10.f)
+			{
+		
+				this->shield->setPosition_shield(x, y);
+				this->shield->remove_shield = false;
+				itemcount++;
+				this->timeItem.restart();
+			}
+			else if (this->type == 12 && this->potion->remove_potion == true && delayItem>10.f)
 			{
 
+				this->potion->setPosition_potion(x, y);
+				this->potion->remove_potion = false;
+				itemcount++;
+				this->timeItem.restart();
 			}
-			
 			x += 88;
 		}
 		//if (x >= 452)
@@ -890,7 +923,7 @@ void Game::update_enemy()
 		}
 		if (this->player->getGlobalBounds_hit().intersects(this->orc_enemies[i]->getGlobalBounds_next_orc()))
 		{
-			if (this->delayEnemyAttack >= 1.5f)
+			if (this->delayEnemyAttack >= 1.5f && this->shield->aura_shield==false)
 			{
 				this->timeEnemyAttack.restart();
 				health--;
@@ -1186,7 +1219,7 @@ void Game::update_fire()
 	{
 		if (this->delayfire >= 1.f)
 		{
-			if (this->player->getGlobalBounds_hit().intersects(this->fires[i]->getGlobalBounds()))
+			if (this->player->getGlobalBounds_hit().intersects(this->fires[i]->getGlobalBounds()) && this->shield->aura_shield == false)
 			{
 				health--;
 				this->timefire.restart();
@@ -1240,15 +1273,20 @@ void Game::update_fire()
 
 void Game::update_fireball()
 {
+	this->delayLoseHpFireball = this->timeLoseHpFireball.getElapsedTime().asSeconds();
 	for (int i = 0; i < this->fireballs.size(); ++i)
 	{
 		if (this->player->getGlobalBounds_hit().intersects(this->fireballs[i]->getGlobalBounds()))
 		{
-			
-			this->fireballs[i]->remove = false; //this->fireballs.erase(this->fireballs.begin() + i);
-			this->health--;
+			this->fireballs[i]->setPosition(-100.f, this->player->getPosition().y);
+			if (this->delayLoseHpFireball > 1 && this->shield->aura_shield == false)
+			{
+				//this->fireballs.erase(this->fireballs.begin() + i);
+				this->health--;
+				this->timeLoseHpFireball.restart();
+			}
 		}
-			
+		
 		if (this->player->getPosition().y + 200.f <= this->fireballs[i]->getPosition().y)
 		{
 			this->fireballs[i]->remove = false;
@@ -1274,17 +1312,22 @@ void Game::update_firebeam()
 void Game::updateGUI()
 {
 	std::stringstream healthNum;
+	std::stringstream auraNum;
 	std::stringstream scoreNum;
 
 	scoreNum << "Score :" << score;
 	healthNum << " x " << health;
+	auraNum << " x " << aura;
 	this->healthText.setString(healthNum.str());
+	this->auraText.setString(auraNum.str());
 	this->bossHpBar.setSize(sf::Vector2f(bossHplose, this->bossHpBar.getSize().y));
 	if (level == 4 && this->player->getPosition().y >= 400)
 	{
 		this->scoreText.setPosition(sf::Vector2f(480.f, this->player->getPosition().y - 550.f));
+		this->auraText.setPosition(sf::Vector2f(135.f, this->player->getPosition().y - 550.f));
 		this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 550.f));
 		this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 550.f));
+		this->shield_s.setPosition(sf::Vector2f(100.f, this->player->getPosition().y - 550.f));
 
 		this->BossHp.setPosition(sf::Vector2f(60.f, 345.f));
 		this->bossHpBar.setPosition(sf::Vector2f(85.f, 350.f));
@@ -1292,8 +1335,10 @@ void Game::updateGUI()
 	else
 	{
 		this->scoreText.setPosition(sf::Vector2f(480.f, this->player->getPosition().y - 470.f));
+		this->auraText.setPosition(sf::Vector2f(135.f, this->player->getPosition().y - 470.f));
 		this->healthText.setPosition(sf::Vector2f(35.f, this->player->getPosition().y - 470.f));
 		this->health_s.setPosition(sf::Vector2f(0.f, this->player->getPosition().y - 470.f));
+		this->shield_s.setPosition(sf::Vector2f(100.f, this->player->getPosition().y - 470.f));
 
 	}
 	
@@ -1302,6 +1347,52 @@ void Game::updateGUI()
 	
 
 
+}
+
+void Game::update_Item()
+{
+	this->shield->update();
+	this->potion->update();
+	this->delayShield=this->timeShield.getElapsedTime().asSeconds();
+	this->shield->setPosition_aura(this->player->getPosition().x-25.f, this->player->getPosition().y-10.f);
+	if (this->delayShield > 5.f)
+	{
+		this->shield->aura_shield = false;
+		if (this->aura > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) )
+		{
+			aura=0;
+			this->shield->aura_shield = true;
+			this->timeShield.restart();
+			
+		}
+	}
+	
+	if (this->player->getGlobalBounds_hit().intersects(this->potion->getGlobalBounds_potion()))
+	{
+		this->potion->setPosition_potion(-100.f, this->player->getPosition().y);
+		this->potion->remove_potion = true;
+		this->health++;
+
+	}
+	if (this->player->getGlobalBounds_hit().intersects(this->shield->getGlobalBounds_shield()))
+	{
+		this->shield->setPosition_shield(20.f, this->player->getPosition().y);
+		this->shield->remove_shield = true;
+		this->aura++;
+		
+	}
+	 if(this->player->getPosition().y - 700.f >= this->potion->getPosition_potion().y)
+	{
+		this->potion->setPosition_potion(-100.f, this->player->getPosition().y);
+		this->potion->remove_potion = true;
+
+	}
+	else if (this->player->getPosition().y - 700.f >= this->shield->getPosition_shield().y)
+	{
+		this->shield->setPosition_shield(-100.f, this->player->getPosition().y);
+		this->shield->remove_shield = true;
+
+	}
 }
 
 void Game::boss_attack()
@@ -1562,7 +1653,14 @@ void Game::update()
 
 	this->updateWorld();
 
+	this->update_Item();
 	//this->enemy_view();
+}
+
+void Game::renderItem()
+{
+	this->shield->render(*this->window);
+	this->potion->render(*this->window);
 }
 
 void Game::renderOp()
@@ -1587,9 +1685,11 @@ void Game::renderGUI()
 {
 	if (play == true)
 	{
+		this->window->draw(shield_s);
 		this->window->draw(health_s);
 		this->window->draw(scoreText);
 		this->window->draw(healthText);
+		this->window->draw(auraText);
 	}
 
 
@@ -1668,7 +1768,7 @@ void Game::render()
 		this->window->draw(this->op_Background); 
 	}
 
-	
+	this->renderItem();
 	this->renderPlayer();
 	this->renderOp();
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));

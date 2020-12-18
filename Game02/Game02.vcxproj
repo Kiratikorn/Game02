@@ -30,6 +30,8 @@
     <ClInclude Include="Fire_above.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Opening.h" />
+    <ClInclude Include="Potion.h" />
+    <ClInclude Include="Shield.h" />
     <ClInclude Include="Textbox.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Mainmenu.h" />
@@ -57,6 +59,8 @@
     <ClCompile Include="Orc.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Potion.cpp" />
+    <ClCompile Include="Shield.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileMap.cpp" />
   </ItemGroup>
