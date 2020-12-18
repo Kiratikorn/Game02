@@ -218,14 +218,14 @@ void Player::updatePhysics()
 
 void Player::updateMovement()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T))
+	/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::T))
 	{
 		test= true;
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
 	{
 		test = false;
-	}
+	}*/
 	this->animState = PLAYER_ANIMATION_STATES::IDLE;
 	this->attack = false;
 	this->digdown = false;
@@ -257,7 +257,7 @@ void Player::updateMovement()
 	else if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && player_play == true)|| test == true)
 	{
 		//sprite.move(0.f, 5.f);
-		if (delaydig >=0.f)	//delay 1
+		if (delaydig >=1.f)	//delay 1
 		{
 			this->animState = PLAYER_ANIMATION_STATES::DIG;
 			this->digdown = true;
