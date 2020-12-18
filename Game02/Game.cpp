@@ -21,6 +21,12 @@ void Game::initWindow()
 	this->musicBG.setVolume(20);
 }
 
+void Game::initSystem()
+{
+	this->coinSound.loadFromFile("Music/coinCollect.wav");
+	this->coinsSound.setBuffer(this->coinSound);
+}
+
 void Game::initItem()
 {
 	this->shield = new Shield();
@@ -83,6 +89,7 @@ void Game::loadMap()
 Game::Game()
 {
 	this->initWindow();
+	this->initSystem();
 	this->initWorld();
 	this->initPlayer();
 	this->initEnemy();
@@ -966,7 +973,7 @@ void Game::update_boss()
 	}
 	if (this->player->getGlobalBounds_attack().intersects(this->boss->getGlobalBounds_hit_box_boss()) && this->player->attack == true)
 	{
-		this->bossHplose-=200;
+		this->bossHplose-=10;
 	}
 	
 }
@@ -1575,6 +1582,7 @@ void Game::update_coin()
 		{
 			this->coins[i]->setPosition(-100.f, this->player->getPosition().y + 1000.f);
 			this->score+=5;
+			this->coinsSound.play();
 			//printf("%d\n", score);
 		}
 		if (this->player->digup == true)

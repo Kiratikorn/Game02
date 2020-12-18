@@ -46,6 +46,9 @@ private:
 	vector<pair<int, string>>userScore;
 	bool endgames = false;
 
+	sf::SoundBuffer coinSound;
+	sf::Sound coinsSound;
+
 	float bossHplose = 500.f;
 	void showhighscore(int x, int y, string word, sf::RenderWindow& window, sf::Font* font);
 	int x = 100, y = 500;
@@ -150,6 +153,7 @@ private:
 
 	void playgame();
 	void initWindow();
+	void initSystem();
 	void initItem();
 	void initWorld();
 	void initPlayer();
