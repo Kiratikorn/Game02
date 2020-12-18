@@ -120,7 +120,7 @@ void Fire_above::update_FA()
 	}
 	else if (this->speed >= 5 && opRestart == 1)
 	{
-		printf("+++++fire+++++++;");
+		//printf("+++++fire+++++++;");
 		startfire = true;
 		//this->timeSpeed.restart();
 		opRestart = 2;

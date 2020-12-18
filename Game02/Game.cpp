@@ -230,6 +230,16 @@ void Game::run()
 					gameState = 2;
 				}
 			}
+			else if (this->menu->getBounds_5().contains(this->mousePosview))
+
+			{
+	
+				this->menu->buttoncheck(5);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					//this->clicks.play();
+					gameState = 6;
+				}
+			}
 		}
 
 
@@ -262,13 +272,29 @@ void Game::run()
 			if (health <= 0) {
 				gameState = 3;
 			}
+			else if (bossHplose<= 0) {
+				gameState = 4;
+			}
 		}
 		
 		else if (gameState == 2)
 		{
+			this->updateMousePositions();
 			this->menu->playMenu = 2;
 			this->menu->render_Menu(*this->window);
 			//highscorena eiei
+			
+		if (this->menu->getBounds_3().contains(this->mousePosview))
+
+		{
+			printf("click");
+			this->menu->buttoncheck(3);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				
+				//this->clicks.play();
+				this->gameState = 0;
+			}
+		}
 			for (int i = 135; i <= 475; i += 85) {
 				showhighscore(450, i, to_string(userScore[(i - 135) / 85].first), *this->window, &font);
 				showhighscore(100, i, userScore[(i - 135) / 85].second, *this->window, &font);
@@ -277,6 +303,7 @@ void Game::run()
 		}
 		else if (gameState == 3)
 		{
+		this->updateMousePositions();
 			std::stringstream your_score;
 			this->menu->playMenu = 3;
 			this->menu->render_Menu(*this->window);
@@ -287,11 +314,46 @@ void Game::run()
 			//std::cout << "YOUR SCORE:" << this->score;
 			
 			this->menu->scoreText.setString(your_score.str());
-			
+			if (this->menu->getBounds_4().contains(this->mousePosview))
+
+			{
+				printf("click");
+				//this->menu->buttoncheck(3);
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+					//this->clicks.play();
+					this->gameState = 5;
+				}
+			}
 		
 		}
+		else if (gameState == 4)
+		{
+		this->updateMousePositions();
+		std::stringstream your_score;
+		this->menu->playMenu = 4;
+		this->menu->render_Menu(*this->window);
 
-		else if (gameState ==4)
+
+		//printf("stage 3");
+		your_score << "YOUR SCORE: " << this->score;
+		//std::cout << "YOUR SCORE:" << this->score;
+
+		this->menu->scoreText.setString(your_score.str());
+		if (this->menu->getBounds_4().contains(this->mousePosview))
+
+		{
+			printf("click");
+			//this->menu->buttoncheck(3);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+				//this->clicks.play();
+				this->gameState = 5;
+			}
+		}
+
+		}
+		else if (gameState ==5)
 		{
 		printf("stage 4");
 			if (endgames == false) {
@@ -308,6 +370,26 @@ void Game::run()
 				fclose(fp);
 				endgames = true;
 			}
+		}
+		else if (gameState == 6)
+		{
+		this->updateMousePositions();
+		this->menu->playMenu = 6;
+		this->menu->render_Menu(*this->window);
+
+
+		if (this->menu->getBounds_6().contains(this->mousePosview))
+
+		{
+			printf("click");
+			//this->menu->buttoncheck(3);
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+
+				//this->clicks.play();
+				this->gameState = 0;
+			}
+		}
+
 		}
 		window->display();
 	}
@@ -884,7 +966,7 @@ void Game::update_boss()
 	}
 	if (this->player->getGlobalBounds_attack().intersects(this->boss->getGlobalBounds_hit_box_boss()) && this->player->attack == true)
 	{
-		this->bossHplose-=10;
+		this->bossHplose-=200;
 	}
 	
 }
@@ -1794,7 +1876,7 @@ void Game::render()
 	this->renderOp();
 	//sf::Vector2f(0.0f, 0.0f), sf::Vector2f(650.f, 950.f));
 	this->view.setSize(650.f,950.f);
-	if (health<=0)
+	if (health<=0 ||  bossHplose <= 0)
 	{
 		this->view.setCenter(650.f / 2, this->window->getSize().y/2);
 	}
