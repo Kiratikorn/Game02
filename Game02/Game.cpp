@@ -336,6 +336,7 @@ void Game::run()
 		}
 		else if (gameState == 4)
 		{
+	
 		this->updateMousePositions();
 		std::stringstream your_score;
 		this->menu->playMenu = 4;
@@ -973,9 +974,12 @@ void Game::update_boss()
 	}
 	if (this->player->getGlobalBounds_attack().intersects(this->boss->getGlobalBounds_hit_box_boss()) && this->player->attack == true)
 	{
-		this->bossHplose-=10;
+		this->bossHplose -= 10;
 	}
-	
+	if (bossHplose == 0)
+	{
+		score += 100;
+	}
 }
 
 void Game::update_fireabove()
@@ -1470,7 +1474,7 @@ void Game::update_Item()
 		this->shield->aura_shield = false;
 		if (this->aura > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E) )
 		{
-			aura=0;
+			aura--;
 			this->shield->aura_shield = true;
 			this->timeShield.restart();
 			
